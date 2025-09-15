@@ -1,0 +1,188 @@
+{
+  "name": "adf-preview",
+  "displayName": "ADF Preview for Confluence",
+  "description": "Preview and edit Atlassian Document Format (ADF) files with live Confluence-style rendering",
+  "version": "0.1.0",
+  "publisher": "jerome-erasmus",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Visualization",
+    "Other"
+  ],
+  "keywords": [
+    "adf",
+    "atlassian",
+    "confluence",
+    "preview",
+    "viewer",
+    "json"
+  ],
+  "icon": "resources/icons/adf-icon.png",
+  "activationEvents": [
+    "onCustomEditor:adf.preview",
+    "onCommand:adf.openPreview",
+    "onCommand:adf.checkAndPreview",
+    "onLanguage:json"
+  ],
+  "main": "./dist/extension/extension.js",
+  "contributes": {
+    "customEditors": [
+      {
+        "viewType": "adf.preview",
+        "displayName": "ADF Preview",
+        "selector": [
+          {
+            "filenamePattern": "*adf*.json",
+            "priority": "option"
+          },
+          {
+            "filenamePattern": "*.json",
+            "priority": "option"
+          }
+        ],
+        "priority": "option"
+      }
+    ],
+    "commands": [
+      {
+        "command": "adf.openPreview",
+        "title": "Open ADF Preview",
+        "category": "ADF"
+      },
+      {
+        "command": "adf.checkAndPreview",
+        "title": "Check and Preview as ADF",
+        "category": "ADF"
+      },
+      {
+        "command": "adf.exportAsHTML",
+        "title": "Export as HTML",
+        "category": "ADF"
+      },
+      {
+        "command": "adf.exportAsMarkdown",
+        "title": "Export as Markdown",
+        "category": "ADF"
+      },
+      {
+        "command": "adf.validateDocument",
+        "title": "Validate ADF Document",
+        "category": "ADF"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "when": "resourceExtname == .json",
+          "command": "adf.checkAndPreview",
+          "group": "navigation"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "adf.exportAsHTML",
+          "when": "activeCustomEditorId == adf.preview"
+        },
+        {
+          "command": "adf.exportAsMarkdown",
+          "when": "activeCustomEditorId == adf.preview"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "ADF Preview",
+      "properties": {
+        "adf.preview.theme": {
+          "type": "string",
+          "default": "auto",
+          "enum": [
+            "auto",
+            "light",
+            "dark"
+          ],
+          "description": "Theme for ADF preview"
+        },
+        "adf.preview.fontSize": {
+          "type": "number",
+          "default": 14,
+          "description": "Font size for ADF preview"
+        },
+        "adf.preview.autoUpdate": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically update preview when document changes"
+        },
+        "adf.preview.updateDelay": {
+          "type": "number",
+          "default": 500,
+          "description": "Delay in milliseconds before updating preview"
+        },
+        "adf.export.includeStyles": {
+          "type": "boolean",
+          "default": true,
+          "description": "Include styles when exporting to HTML"
+        },
+        "adf.validation.strict": {
+          "type": "boolean",
+          "default": true,
+          "description": "Use strict validation for ADF documents"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run build",
+    "compile": "npm run compile:extension && npm run compile:webview",
+    "compile:extension": "tsc -p ./",
+    "compile:webview": "webpack --mode development",
+    "watch": "concurrently \"npm run watch:extension\" \"npm run watch:webview\"",
+    "watch:extension": "tsc -watch -p ./",
+    "watch:webview": "webpack --mode development --watch",
+    "build": "npm run build:extension && npm run build:webview",
+    "build:extension": "tsc -p ./",
+    "build:webview": "webpack --mode production",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts,tsx",
+    "test": "mocha --require ts-node/register --project tsconfig.test.json 'src/**/*.test.ts'",
+    "test:watch": "mocha --require ts-node/register --project tsconfig.test.json 'src/**/*.test.ts' --watch",
+    "test:coverage": "nyc mocha --require ts-node/register --project tsconfig.test.json 'src/**/*.test.ts'",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.3.5",
+    "@types/glob": "^8.1.0",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "16.x",
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.18",
+    "@types/vscode": "^1.74.0",
+    "@typescript-eslint/eslint-plugin": "^5.59.8",
+    "@typescript-eslint/parser": "^5.59.8",
+    "@vscode/test-electron": "^2.3.2",
+    "chai": "^4.3.7",
+    "concurrently": "^8.2.0",
+    "css-loader": "^6.8.1",
+    "eslint": "^8.41.0",
+    "glob": "^8.1.0",
+    "html-webpack-plugin": "^5.5.3",
+    "mocha": "^10.2.0",
+    "nyc": "^15.1.0",
+    "style-loader": "^3.3.3",
+    "ts-loader": "^9.4.3",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.3",
+    "vsce": "^2.15.0",
+    "webpack": "^5.85.0",
+    "webpack-cli": "^5.1.1"
+  },
+  "dependencies": {
+    "@atlaskit/adf-schema": "^35.5.1",
+    "@atlaskit/renderer": "^107.3.14",
+    "@emotion/react": "^11.11.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "markdown-it": "^13.0.1"
+  }
+}

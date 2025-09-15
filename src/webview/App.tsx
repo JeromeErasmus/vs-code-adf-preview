@@ -1,0 +1,175 @@
+import React, { useState, useEffect, useCallback } from 'react';
+import { ADFRenderer } from './components/ADFRenderer';
+import { ErrorBoundary } from './components/ErrorBoundary';
+import { ErrorDisplay } from './components/ErrorDisplay';
+import { LoadingSpinner } from './components/LoadingSpinner';
+import { ADFDocument, WebviewMessage, UpdateMessage, ErrorMessage, ValidationError } from '../shared/types';
+
+const App: React.FC = () => {
+  const [document, setDocument] = useState<ADFDocument | null>(null);
+  const [errors, setErrors] = useState<ValidationError[]>([]);
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [fontSize, setFontSize] = useState<number>(14);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  // Handle messages from extension
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      const message: WebviewMessage = event.data;
+      
+      switch (message.type) {
+        case 'update':
+          const updateMsg = message as UpdateMessage;
+          setDocument(updateMsg.payload.document);
+          setErrors([]);
+          if (updateMsg.payload.theme) {
+            setTheme(updateMsg.payload.theme === 'auto' ? detectTheme() : updateMsg.payload.theme);
+          }
+          if (updateMsg.payload.fontSize) {
+            setFontSize(updateMsg.payload.fontSize);
+          }
+          setIsLoading(false);
+          break;
+        
+        case 'error':
+          const errorMsg = message as ErrorMessage;
+          setErrors(errorMsg.payload.errors);
+          setIsLoading(false);
+          break;
+        
+        case 'theme':
+          const newTheme = message.payload.theme;
+          setTheme(newTheme === 'auto' ? detectTheme() : newTheme);
+          break;
+        
+        default:
+          console.log('Unknown message type:', message.type);
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+    
+    // Send ready message to extension
+    if (window.vscode) {
+      window.vscode.postMessage({ type: 'ready' });
+    }
+
+    return () => {
+      window.removeEventListener('message', handleMessage);
+    };
+  }, []);
+
+  // Detect system theme
+  const detectTheme = useCallback((): 'light' | 'dark' => {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return 'dark';
+    }
+    return 'light';
+  }, []);
+
+  // Apply theme to body
+  useEffect(() => {
+    document.body.className = `theme-${theme}`;
+  }, [theme]);
+
+  // Apply font size
+  useEffect(() => {
+    document.documentElement.style.setProperty('--adf-font-size', `${fontSize}px`);
+  }, [fontSize]);
+
+  // Handle export request
+  const handleExport = useCallback((format: 'html' | 'markdown' | 'pdf' | 'json') => {
+    if (window.vscode) {
+      window.vscode.postMessage({
+        type: 'export',
+        payload: { format }
+      });
+    }
+  }, []);
+
+  // Render loading state
+  if (isLoading) {
+    return (
+      <div className="adf-preview-container loading">
+        <LoadingSpinner />
+        <p>Loading ADF document...</p>
+      </div>
+    );
+  }
+
+  // Render error state
+  if (errors.length > 0) {
+    return (
+      <div className="adf-preview-container error">
+        <ErrorDisplay errors={errors} />
+      </div>
+    );
+  }
+
+  // Render empty state
+  if (!document) {
+    return (
+      <div className="adf-preview-container empty">
+        <div className="empty-state">
+          <h2>No ADF Document</h2>
+          <p>Open a valid ADF JSON file to see the preview.</p>
+          <p className="hint">ADF documents must have:</p>
+          <ul className="hint-list">
+            <li>type: "doc"</li>
+            <li>version: 1</li>
+            <li>content: [...]</li>
+          </ul>
+        </div>
+      </div>
+    );
+  }
+
+  // Render document
+  return (
+    <ErrorBoundary>
+      <div className="adf-preview-container">
+        <div className="adf-preview-toolbar">
+          <div className="toolbar-group">
+            <button 
+              className="toolbar-button"
+              onClick={() => handleExport('html')}
+              title="Export as HTML"
+            >
+              📄 HTML
+            </button>
+            <button 
+              className="toolbar-button"
+              onClick={() => handleExport('markdown')}
+              title="Export as Markdown"
+            >
+              📝 Markdown
+            </button>
+            <button 
+              className="toolbar-button"
+              onClick={() => handleExport('json')}
+              title="Export as formatted JSON"
+            >
+              🔧 JSON
+            </button>
+          </div>
+          <div className="toolbar-group">
+            <span className="toolbar-label">Theme:</span>
+            <select 
+              className="toolbar-select"
+              value={theme}
+              onChange={(e) => setTheme(e.target.value as 'light' | 'dark')}
+            >
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
+          </div>
+        </div>
+        <div className="adf-preview-content">
+          <ADFRenderer document={document} />
+        </div>
+      </div>
+    </ErrorBoundary>
+  );
+};
+
+export default App;
