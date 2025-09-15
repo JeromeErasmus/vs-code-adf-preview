@@ -19,8 +19,8 @@ function log(color, message) {
 function runTests() {
   log('blue', '🧪 Running ADF Preview Extension Tests...\n');
   
-  const testCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
-  const args = ['run', 'test'];
+  const testCommand = process.platform === 'win32' ? 'yarn.cmd' : 'yarn';
+  const args = ['test'];
   
   const testProcess = spawn(testCommand, args, {
     stdio: 'inherit',

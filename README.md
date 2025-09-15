@@ -28,29 +28,75 @@ A powerful VS Code and Cursor IDE extension for previewing and editing Atlassian
 
 ## Installation
 
-### From VSIX (Recommended for Cursor)
-1. Download the latest `.vsix` file from the releases
-2. Install via command line:
+### VS Code Installation
+
+#### Method 1: VS Code Extension Marketplace (Coming Soon)
+1. Open VS Code
+2. Go to Extensions view (Ctrl+Shift+X / Cmd+Shift+X)
+3. Search for "ADF Preview"
+4. Click "Install"
+
+#### Method 2: Install from VSIX
+1. Download the latest `.vsix` file from [GitHub Releases](https://github.com/yourusername/adf-preview/releases)
+2. **Via Command Palette:**
+   - Open Command Palette (Ctrl+Shift+P / Cmd+Shift+P)
+   - Type "Extensions: Install from VSIX"
+   - Select the downloaded `.vsix` file
+3. **Via Command Line:**
+   ```bash
+   code --install-extension adf-preview-0.1.0.vsix
+   ```
+
+### Cursor IDE Installation
+
+#### Method 1: Install from VSIX (Recommended)
+1. Download the latest `.vsix` file from [GitHub Releases](https://github.com/yourusername/adf-preview/releases)
+2. **Via Drag & Drop:**
+   - Simply drag the `.vsix` file into the Cursor window
+3. **Via Command Line:**
    ```bash
    cursor --install-extension adf-preview-0.1.0.vsix
    ```
-   Or drag the VSIX file into the Cursor window
+4. **Via Cursor Settings:**
+   - Open Cursor
+   - Go to Extensions (Ctrl+Shift+X / Cmd+Shift+X)
+   - Click the "..." menu → "Install from VSIX"
+   - Select the downloaded file
 
-### From Source
-1. Clone this repository
+#### Method 2: Manual Installation (Advanced)
+1. Extract the `.vsix` file (it's a ZIP archive)
+2. Copy the extracted folder to:
+   - **Windows:** `%USERPROFILE%\.cursor\extensions\`
+   - **macOS:** `~/.cursor/extensions/`
+   - **Linux:** `~/.cursor/extensions/`
+3. Restart Cursor
+
+### Build from Source
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/yourusername/adf-preview.git
+   cd adf-preview
+   ```
 2. Install dependencies:
    ```bash
-   npm install
+   yarn install
    ```
 3. Build the extension:
    ```bash
-   npm run build
+   yarn build
    ```
 4. Package the extension:
    ```bash
-   npm run package
+   yarn package
    ```
-5. Install the generated `.vsix` file
+5. Install the generated `.vsix` file using methods above
+
+### Verification
+After installation, verify the extension is working:
+1. Open a JSON file or create a new one
+2. Paste sample ADF content (see Usage section)
+3. Right-click → "Check and Preview as ADF"
+4. The ADF Preview should open showing rendered content
 
 ## Usage
 
@@ -103,7 +149,7 @@ Configure the extension in VS Code/Cursor settings:
 
 ### Prerequisites
 - Node.js 18+
-- npm or yarn
+- Yarn (recommended package manager)
 - VS Code or Cursor IDE
 
 ### Project Structure
@@ -128,25 +174,25 @@ adf-preview/
 ### Building from Source
 ```bash
 # Install dependencies
-npm install
+yarn install
 
 # Development build with watch
-npm run watch
+yarn watch
 
 # Production build
-npm run build
+yarn build
 
 # Run tests
-npm test
+yarn test
 
 # Run tests with watch mode
-npm run test:watch
+yarn test:watch
 
 # Run tests with coverage
-npm run test:coverage
+yarn test:coverage
 
 # Package as VSIX
-npm run package
+yarn package
 ```
 
 ### Running Tests
@@ -158,13 +204,13 @@ The extension includes comprehensive unit tests covering:
 
 ```bash
 # Run all tests
-npm test
+yarn test
 
 # Run tests in watch mode for development
-npm run test:watch
+yarn test:watch
 
 # Generate test coverage report
-npm run test:coverage
+yarn test:coverage
 
 # Quick test runner with colored output
 node scripts/test.js
@@ -249,6 +295,23 @@ MIT License - see LICENSE file for details
 - Report issues on [GitHub Issues](https://github.com/yourusername/adf-preview/issues)
 - For feature requests, open a discussion
 - Check the [wiki](https://github.com/yourusername/adf-preview/wiki) for detailed documentation
+
+### Quick Start Commands
+```bash
+# Clone and setup
+git clone https://github.com/yourusername/adf-preview.git
+cd adf-preview
+yarn install
+
+# Development
+yarn watch     # Start development build with watch
+yarn test      # Run unit tests
+yarn package   # Create VSIX package
+
+# Quality checks
+yarn lint      # Check code style
+yarn test:coverage  # Generate test coverage
+```
 
 ---
 Made with ❤️ for the Confluence and developer community

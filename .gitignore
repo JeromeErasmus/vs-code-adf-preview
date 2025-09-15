@@ -38,7 +38,12 @@ out/
 
 # Package managers
 .yarn/
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
 .pnp.*
+yarn-error.log
 
 # IDE
 .vscode-test/

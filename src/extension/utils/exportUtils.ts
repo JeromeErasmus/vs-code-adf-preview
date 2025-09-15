@@ -211,7 +211,8 @@ function convertContent(node: ADFEntity): string {
 function applyMarks(html: string, marks: any[]): string {
   let result = html;
   
-  marks.forEach(mark => {
+  // Apply marks in reverse order so nested tags work correctly
+  marks.slice().reverse().forEach(mark => {
     switch (mark.type) {
       case 'strong':
         result = `<strong>${result}</strong>`;
@@ -231,7 +232,7 @@ function applyMarks(html: string, marks: any[]): string {
       case 'link':
         const href = mark.attrs?.href || '#';
         const title = mark.attrs?.title ? ` title="${escapeHtml(mark.attrs.title)}"` : '';
-        result = `<a href="${escapeHtml(href)}"${title}>${result}</a>`;
+        result = `<a href="${href}"${title}>${result}</a>`;
         break;
       case 'textColor':
         const color = mark.attrs?.color || 'inherit';
