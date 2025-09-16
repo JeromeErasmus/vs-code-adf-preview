@@ -128,7 +128,7 @@ export class ADFCustomEditorProvider implements vscode.CustomTextEditorProvider 
             type: 'update',
             payload: {
               document: jsonData as ADFDocument,
-              theme: config.get<'light' | 'dark' | 'auto'>('theme', 'auto'),
+              theme: config.get<'light' | 'dark' | 'auto'>('theme', 'light'),
               fontSize: config.get<number>('fontSize', 14)
             }
           };

@@ -63,3 +63,6 @@ confluence-downloads/
 
 # Test files that may contain sensitive data
 *.mjs
+
+# Test samples folder (exclude from git)
+test/samples/

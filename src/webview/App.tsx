@@ -23,7 +23,8 @@ const App: React.FC = () => {
           setAdfDocument(updateMsg.payload.document);
           setErrors([]);
           if (updateMsg.payload.theme) {
-            setTheme(updateMsg.payload.theme === 'auto' ? detectTheme() : updateMsg.payload.theme);
+            // Always default to light mode, even for 'auto'
+            setTheme(updateMsg.payload.theme === 'auto' ? 'light' : updateMsg.payload.theme);
           }
           if (updateMsg.payload.fontSize) {
             setFontSize(updateMsg.payload.fontSize);
@@ -39,7 +40,8 @@ const App: React.FC = () => {
         
         case 'theme':
           const newTheme = message.payload.theme;
-          setTheme(newTheme === 'auto' ? detectTheme() : newTheme);
+          // Always default to light mode, even for 'auto'
+          setTheme(newTheme === 'auto' ? 'light' : newTheme);
           break;
         
         default:
@@ -54,13 +56,7 @@ const App: React.FC = () => {
     };
   }, []);
 
-  // Detect system theme
-  const detectTheme = useCallback((): 'light' | 'dark' => {
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      return 'dark';
-    }
-    return 'light';
-  }, []);
+  // Note: detectTheme function removed - now always default to light mode
 
   // Apply theme to body
   useEffect(() => {
