@@ -9,9 +9,9 @@ A powerful VS Code and Cursor IDE extension for previewing and editing Atlassian
 ## Features
 
 ### 🎯 Core Features
-- **Live Preview**: Real-time rendering of ADF JSON documents with 100% Confluence fidelity
+- **Live Preview**: Real-time rendering of ADF documents with 100% Confluence fidelity
 - **@atlaskit/renderer Integration**: Uses Atlassian's official renderer for authentic display
-- **Auto-detection**: Automatically detects ADF structure in JSON files
+- **Auto-detection**: Automatically detects ADF structure in files
 - **Split View**: View source JSON and rendered preview side-by-side
 - **Dark Mode Support**: Seamless theme switching between light and dark modes
 - **Validation**: Built-in ADF structure validation with error highlighting
@@ -93,7 +93,7 @@ A powerful VS Code and Cursor IDE extension for previewing and editing Atlassian
 
 ### Verification
 After installation, verify the extension is working:
-1. Open a JSON file or create a new one
+1. Open an ADF file or create a new one
 2. Paste sample ADF content (see Usage section)
 3. Right-click → "Check and Preview as ADF"
 4. The ADF Preview should open showing rendered content
@@ -101,11 +101,11 @@ After installation, verify the extension is working:
 ## Usage
 
 ### Opening ADF Files
-1. **Automatic Detection**: When you open a JSON file with ADF structure (`type: "doc"`, `version: 1`), you'll be prompted to open it in ADF Preview
+1. **Automatic Detection**: When you open an ADF file (`.adf` extension), it will automatically open in ADF Preview
 2. **Manual Opening**: 
-   - Right-click on any JSON file → "Open with ADF Preview"
+   - Right-click on any ADF file → "Open with ADF Preview"
    - Command Palette → "ADF: Open Preview"
-3. **Check and Preview**: Right-click on JSON file → "Check and Preview as ADF"
+3. **Check and Preview**: Right-click on ADF file → "Check and Preview as ADF"
 
 ### Supported ADF Elements
 - ✅ Text formatting (bold, italic, underline, strike, code)
@@ -125,7 +125,7 @@ After installation, verify the extension is working:
 ### Commands
 | Command | Description |
 |---------|-------------|
-| `ADF: Open Preview` | Open current JSON file in ADF Preview |
+| `ADF: Open Preview` | Open current ADF file in ADF Preview |
 | `ADF: Check and Preview` | Validate and open as ADF |
 | `ADF: Validate Document` | Check if document is valid ADF |
 | `ADF: Export as HTML` | Export current preview to HTML |
@@ -504,7 +504,7 @@ A valid ADF document must have:
 ```
 
 ### Extension Not Activating
-- Ensure you have a valid JSON file open
+- Ensure you have a valid ADF file open
 - Check that the file contains valid ADF structure (`type: "doc", version: 1`)
 - Look for errors in Output → ADF Preview
 - **NEW**: Verify webview bundles exist in `dist/webview/`

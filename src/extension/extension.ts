@@ -31,11 +31,10 @@ export function activate(context: vscode.ExtensionContext) {
     }
 
     const document = activeEditor.document;
-    const isValidFile = document.languageId === 'json' && 
-                       document.uri.fsPath.endsWith('.adf.json');
+    const isValidFile = document.uri.fsPath.endsWith('.adf');
     
     if (!isValidFile) {
-      vscode.window.showErrorMessage('Current file is not an ADF JSON file (*.adf.json)');
+      vscode.window.showErrorMessage('Current file is not an ADF file (*.adf)');
       return;
     }
 
@@ -58,11 +57,10 @@ export function activate(context: vscode.ExtensionContext) {
     }
 
     const document = activeEditor.document;
-    const isValidFile = document.languageId === 'json' && 
-                       document.uri.fsPath.endsWith('.adf.json');
+    const isValidFile = document.uri.fsPath.endsWith('.adf');
     
     if (!isValidFile) {
-      vscode.window.showErrorMessage('Current file is not an ADF JSON file (*.adf.json)');
+      vscode.window.showErrorMessage('Current file is not an ADF file (*.adf)');
       return;
     }
 
@@ -109,11 +107,10 @@ export function activate(context: vscode.ExtensionContext) {
     }
 
     const document = activeEditor.document;
-    const isValidFile = document.languageId === 'json' && 
-                       document.uri.fsPath.endsWith('.adf.json');
+    const isValidFile = document.uri.fsPath.endsWith('.adf');
     
     if (!isValidFile) {
-      vscode.window.showErrorMessage('Current file is not an ADF JSON file (*.adf.json)');
+      vscode.window.showErrorMessage('Current file is not an ADF file (*.adf)');
       return;
     }
 

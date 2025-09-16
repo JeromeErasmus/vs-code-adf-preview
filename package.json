@@ -2,7 +2,7 @@
   "name": "adf-preview",
   "displayName": "ADF Preview for Confluence",
   "description": "Preview and edit Atlassian Document Format (ADF) files with live Confluence-style rendering",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "publisher": "jerome-erasmus",
   "engines": {
     "vscode": "^1.74.0"
@@ -34,7 +34,7 @@
         "displayName": "ADF Preview",
         "selector": [
           {
-            "filenamePattern": "*.adf.json",
+            "filenamePattern": "*.adf",
             "priority": "default"
           }
         ],
@@ -81,7 +81,7 @@
     "menus": {
       "editor/context": [
         {
-          "when": "resourcePath =~ /\\.adf\\.json$/",
+          "when": "resourcePath =~ /\\.adf$/",
           "command": "adf.checkAndPreview",
           "group": "navigation"
         }

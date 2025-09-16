@@ -107,7 +107,7 @@ const App: React.FC = () => {
       <div className="adf-preview-container empty">
         <div className="empty-state">
           <h2>No ADF Document</h2>
-          <p>Open a valid ADF JSON file to see the preview.</p>
+          <p>Open a valid ADF file to see the preview.</p>
           <p className="hint">ADF documents must have:</p>
           <ul className="hint-list">
             <li>type: "doc"</li>
