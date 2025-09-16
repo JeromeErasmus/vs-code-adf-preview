@@ -53,18 +53,21 @@ module.exports = (env, argv) => {
         cacheGroups: {
           atlaskit: {
             test: /[\\/]node_modules[\\/]@atlaskit[\\/]/,
-            name: 'atlaskit',
-            priority: 10
+            name: 'atlaskit-vendor',
+            priority: 10,
+            filename: 'atlaskit-vendor.js'
           },
           react: {
             test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
-            name: 'react',
-            priority: 9
+            name: 'react-vendor',
+            priority: 9,
+            filename: 'react-vendor.js'
           },
           vendor: {
             test: /[\\/]node_modules[\\/]/,
             name: 'vendor',
-            priority: 8
+            priority: 8,
+            filename: 'vendor.js'
           }
         }
       }

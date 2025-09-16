@@ -17,6 +17,9 @@ export class ADFCustomEditorProvider implements vscode.CustomTextEditorProvider 
     webviewPanel: vscode.WebviewPanel,
     _token: vscode.CancellationToken
   ): Promise<void> {
+    console.log('resolveCustomTextEditor called for:', document.uri.fsPath);
+    vscode.window.showInformationMessage(`Resolving custom editor for: ${document.fileName}`);
+    
     this.currentDocument = document;
     this.currentWebviewPanel = webviewPanel;
 
@@ -108,6 +111,7 @@ export class ADFCustomEditorProvider implements vscode.CustomTextEditorProvider 
     this.updateTimer = setTimeout(() => {
       try {
         const text = document.getText();
+        console.log('updateWebview - parsing text (first 100 chars):', text.substring(0, 100));
         const jsonData = JSON.parse(text);
 
         // Validate the document
@@ -154,6 +158,7 @@ export class ADFCustomEditorProvider implements vscode.CustomTextEditorProvider 
   private async validateAndShowDiagnostics(document: vscode.TextDocument): Promise<void> {
     try {
       const text = document.getText();
+      console.log('Attempting to parse text (first 100 chars):', text.substring(0, 100));
       const jsonData = JSON.parse(text);
       
       const validator = new ADFValidator();
@@ -266,10 +271,6 @@ export class ADFCustomEditorProvider implements vscode.CustomTextEditorProvider 
     const scriptUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this.context.extensionUri, 'dist', 'webview', 'bundle.js')
     );
-    
-    const styleUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this.context.extensionUri, 'dist', 'webview', 'bundle.css')
-    );
 
     const nonce = this.getNonce();
 
@@ -283,14 +284,32 @@ export class ADFCustomEditorProvider implements vscode.CustomTextEditorProvider 
         script-src 'nonce-${nonce}';
         font-src ${webview.cspSource};
         img-src ${webview.cspSource} https: data:;">
-      <link href="${styleUri}" rel="stylesheet">
       <title>ADF Preview</title>
+      <style>
+        body { 
+          margin: 0; 
+          padding: 20px; 
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+          background: var(--vscode-editor-background, #ffffff);
+          color: var(--vscode-editor-foreground, #000000);
+        }
+        #root { min-height: 100vh; }
+        .loading { text-align: center; padding: 20px; }
+      </style>
     </head>
     <body>
-      <div id="root"></div>
+      <div id="root">
+        <div class="loading">Loading ADF Preview...</div>
+      </div>
       <script nonce="${nonce}">
+        console.log('Webview initialized');
         const vscode = acquireVsCodeApi();
         window.vscode = vscode;
+        
+        // Debug logging
+        window.addEventListener('error', (e) => {
+          console.error('Webview error:', e.error);
+        });
       </script>
       <script nonce="${nonce}" src="${scriptUri}"></script>
     </body>

@@ -300,3 +300,23 @@ body {
 .adf-renderer-wrapper h4 { font-size: calc(var(--adf-font-size) * 1.2); }
 .adf-renderer-wrapper h5 { font-size: calc(var(--adf-font-size) * 1.1); }
 .adf-renderer-wrapper h6 { font-size: var(--adf-font-size); }
+
+/* Temporary renderer styles */
+.temp-renderer .notice {
+  background-color: var(--adf-warning-bg);
+  border: 1px solid var(--adf-warning-border);
+  border-radius: 3px;
+  padding: 12px;
+  margin-bottom: 20px;
+  font-size: 12px;
+}
+
+.temp-renderer .unknown-node {
+  background-color: var(--adf-error-bg);
+  border: 1px solid var(--adf-error-border);
+  border-radius: 3px;
+  padding: 8px;
+  margin: 4px 0;
+  font-size: 12px;
+  color: var(--adf-error-border);
+}

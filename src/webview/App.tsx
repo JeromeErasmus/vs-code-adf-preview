@@ -6,7 +6,7 @@ import { LoadingSpinner } from './components/LoadingSpinner';
 import { ADFDocument, WebviewMessage, UpdateMessage, ErrorMessage, ValidationError } from '../shared/types';
 
 const App: React.FC = () => {
-  const [document, setDocument] = useState<ADFDocument | null>(null);
+  const [adfDocument, setAdfDocument] = useState<ADFDocument | null>(null);
   const [errors, setErrors] = useState<ValidationError[]>([]);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [fontSize, setFontSize] = useState<number>(14);
@@ -20,7 +20,7 @@ const App: React.FC = () => {
       switch (message.type) {
         case 'update':
           const updateMsg = message as UpdateMessage;
-          setDocument(updateMsg.payload.document);
+          setAdfDocument(updateMsg.payload.document);
           setErrors([]);
           if (updateMsg.payload.theme) {
             setTheme(updateMsg.payload.theme === 'auto' ? detectTheme() : updateMsg.payload.theme);
@@ -69,12 +69,16 @@ const App: React.FC = () => {
 
   // Apply theme to body
   useEffect(() => {
-    document.body.className = `theme-${theme}`;
+    if (typeof document !== 'undefined') {
+      document.body.className = `theme-${theme}`;
+    }
   }, [theme]);
 
   // Apply font size
   useEffect(() => {
-    document.documentElement.style.setProperty('--adf-font-size', `${fontSize}px`);
+    if (typeof document !== 'undefined') {
+      document.documentElement.style.setProperty('--adf-font-size', `${fontSize}px`);
+    }
   }, [fontSize]);
 
   // Handle export request
@@ -107,7 +111,7 @@ const App: React.FC = () => {
   }
 
   // Render empty state
-  if (!document) {
+  if (!adfDocument) {
     return (
       <div className="adf-preview-container empty">
         <div className="empty-state">
@@ -165,7 +169,7 @@ const App: React.FC = () => {
           </div>
         </div>
         <div className="adf-preview-content">
-          <ADFRenderer document={document} />
+          <ADFRenderer document={adfDocument} />
         </div>
       </div>
     </ErrorBoundary>
