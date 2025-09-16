@@ -18,7 +18,7 @@ const App: React.FC = () => {
       const message: WebviewMessage = event.data;
       
       switch (message.type) {
-        case 'update':
+        case 'update': {
           const updateMsg = message as UpdateMessage;
           setAdfDocument(updateMsg.payload.document);
           setErrors([]);
@@ -31,18 +31,21 @@ const App: React.FC = () => {
           }
           setIsLoading(false);
           break;
+        }
         
-        case 'error':
+        case 'error': {
           const errorMsg = message as ErrorMessage;
           setErrors(errorMsg.payload.errors);
           setIsLoading(false);
           break;
+        }
         
-        case 'theme':
+        case 'theme': {
           const newTheme = message.payload.theme;
           // Always default to light mode, even for 'auto'
           setTheme(newTheme === 'auto' ? 'light' : newTheme);
           break;
+        }
         
         default:
           console.log('Unknown message type:', message.type);
@@ -78,6 +81,15 @@ const App: React.FC = () => {
       window.vscode.postMessage({
         type: 'export',
         payload: { format }
+      });
+    }
+  }, []);
+
+  // Handle close preview
+  const handleClosePreview = useCallback(() => {
+    if (window.vscode) {
+      window.vscode.postMessage({
+        type: 'closePreview'
       });
     }
   }, []);
@@ -124,6 +136,15 @@ const App: React.FC = () => {
     <ErrorBoundary>
       <div className="adf-preview-container">
         <div className="adf-preview-toolbar">
+          <div className="toolbar-group">
+            <button 
+              className="toolbar-button close-button"
+              onClick={handleClosePreview}
+              title="Close Preview and View Source"
+            >
+              ✕ View Source
+            </button>
+          </div>
           <div className="toolbar-group">
             <button 
               className="toolbar-button"

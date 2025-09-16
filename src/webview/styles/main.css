@@ -82,6 +82,15 @@ body {
   transform: translateY(1px);
 }
 
+.toolbar-button.close-button {
+  background-color: #ff5630;
+  border: 1px solid #de350b;
+}
+
+.toolbar-button.close-button:hover {
+  background-color: #de350b;
+}
+
 .toolbar-label {
   font-size: 12px;
   font-weight: 500;

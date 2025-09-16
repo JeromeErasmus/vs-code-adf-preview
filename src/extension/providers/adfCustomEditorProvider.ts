@@ -78,10 +78,11 @@ export class ADFCustomEditorProvider implements vscode.CustomTextEditorProvider 
         this.updateWebview(document, webviewPanel);
         break;
 
-      case 'export':
+      case 'export': {
         const exportMsg = message as ExportMessage;
         await this.handleExport(document, exportMsg.payload.format, exportMsg.payload.includeStyles);
         break;
+      }
 
       case 'validate':
         await this.validateAndShowDiagnostics(document);
@@ -90,6 +91,11 @@ export class ADFCustomEditorProvider implements vscode.CustomTextEditorProvider 
       case 'error':
         console.error('Webview reported error:', message.payload);
         vscode.window.showErrorMessage(`ADF Preview Error: ${message.payload}`);
+        break;
+
+      case 'closePreview':
+        console.log('Close preview requested');
+        await this.handleClosePreview(document, webviewPanel);
         break;
 
       default:
@@ -157,6 +163,25 @@ export class ADFCustomEditorProvider implements vscode.CustomTextEditorProvider 
         });
       }
     }, updateDelay);
+  }
+
+  private async handleClosePreview(
+    document: vscode.TextDocument,
+    webviewPanel: vscode.WebviewPanel
+  ): Promise<void> {
+    try {
+      // Close the webview panel
+      webviewPanel.dispose();
+      
+      // Open the document in the default text editor
+      await vscode.window.showTextDocument(document.uri, {
+        viewColumn: vscode.ViewColumn.Active,
+        preserveFocus: false
+      });
+    } catch (error) {
+      console.error('Error closing preview:', error);
+      vscode.window.showErrorMessage(`Failed to close preview: ${error}`);
+    }
   }
 
   private async validateAndShowDiagnostics(document: vscode.TextDocument): Promise<void> {

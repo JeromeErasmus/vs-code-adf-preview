@@ -46,7 +46,8 @@ export type MessageType =
   | 'scroll'
   | 'theme'
   | 'validate'
-  | 'ready';
+  | 'ready'
+  | 'closePreview';
 
 export interface WebviewMessage {
   type: MessageType;
