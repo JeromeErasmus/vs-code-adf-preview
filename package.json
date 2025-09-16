@@ -2,7 +2,7 @@
   "name": "adf-preview",
   "displayName": "ADF Preview for Confluence",
   "description": "Preview and edit Atlassian Document Format (ADF) files with live Confluence-style rendering",
-  "version": "0.2.9",
+  "version": "0.3.0",
   "publisher": "jerome-erasmus",
   "engines": {
     "vscode": "^1.74.0"
