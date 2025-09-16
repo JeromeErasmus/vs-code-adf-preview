@@ -12,6 +12,29 @@ export class ADFCustomEditorProvider implements vscode.CustomTextEditorProvider 
 
   constructor(private readonly context: vscode.ExtensionContext) {}
 
+  public async closeActivePreview(): Promise<boolean> {
+    if (this.currentWebviewPanel && this.currentDocument) {
+      try {
+        // Close the webview panel
+        this.currentWebviewPanel.dispose();
+        
+        // Open the document in the default text editor
+        await vscode.window.showTextDocument(this.currentDocument.uri, {
+          viewColumn: vscode.ViewColumn.Active,
+          preserveFocus: false
+        });
+        
+        return true;
+      } catch (error) {
+        console.error('Error closing active preview:', error);
+        vscode.window.showErrorMessage(`Failed to close preview: ${error}`);
+        return false;
+      }
+    }
+    
+    return false;
+  }
+
   public async resolveCustomTextEditor(
     document: vscode.TextDocument,
     webviewPanel: vscode.WebviewPanel,

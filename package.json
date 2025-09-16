@@ -53,6 +53,11 @@
         "category": "ADF"
       },
       {
+        "command": "adf.closePreview",
+        "title": "Close ADF Preview",
+        "category": "ADF"
+      },
+      {
         "command": "adf.exportAsHTML",
         "title": "Export as HTML",
         "category": "ADF"

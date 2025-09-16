@@ -164,6 +164,17 @@ export function activate(context: vscode.ExtensionContext) {
     }
   });
 
+  const closePreviewCommand = vscode.commands.registerCommand('adf.closePreview', async () => {
+    if (customEditorProvider) {
+      const success = await customEditorProvider.closeActivePreview();
+      if (!success) {
+        vscode.window.showInformationMessage('No active ADF preview to close');
+      }
+    } else {
+      vscode.window.showErrorMessage('ADF extension not properly initialized');
+    }
+  });
+
   // Test command to verify extension is loading
   const testCommand = vscode.commands.registerCommand('adf.test', () => {
     vscode.window.showInformationMessage('ADF Extension is loaded and working!');
@@ -194,7 +205,8 @@ export function activate(context: vscode.ExtensionContext) {
     checkAndPreviewCommand,
     validateDocumentCommand,
     exportAsHTMLCommand,
-    exportAsMarkdownCommand
+    exportAsMarkdownCommand,
+    closePreviewCommand
   );
 
   // Auto-detect ADF files
