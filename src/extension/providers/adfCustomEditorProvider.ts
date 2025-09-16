@@ -69,8 +69,11 @@ export class ADFCustomEditorProvider implements vscode.CustomTextEditorProvider 
     document: vscode.TextDocument,
     webviewPanel: vscode.WebviewPanel
   ): Promise<void> {
+    console.log('Received message from webview:', message.type);
+    
     switch (message.type) {
       case 'ready':
+        console.log('Webview reported ready - sending initial content');
         // Webview is ready, send initial content
         this.updateWebview(document, webviewPanel);
         break;
@@ -85,6 +88,7 @@ export class ADFCustomEditorProvider implements vscode.CustomTextEditorProvider 
         break;
 
       case 'error':
+        console.error('Webview reported error:', message.payload);
         vscode.window.showErrorMessage(`ADF Preview Error: ${message.payload}`);
         break;
 
@@ -268,7 +272,17 @@ export class ADFCustomEditorProvider implements vscode.CustomTextEditorProvider 
   }
 
   private getWebviewContent(webview: vscode.Webview): string {
-    const scriptUri = webview.asWebviewUri(
+    // Load all necessary script chunks in correct order
+    const atlaskitVendorUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(this.context.extensionUri, 'dist', 'webview', 'atlaskit-vendor.js')
+    );
+    const reactVendorUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(this.context.extensionUri, 'dist', 'webview', 'react-vendor.js')
+    );
+    const vendorUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(this.context.extensionUri, 'dist', 'webview', 'vendor.js')
+    );
+    const bundleUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this.context.extensionUri, 'dist', 'webview', 'bundle.js')
     );
 
@@ -309,9 +323,21 @@ export class ADFCustomEditorProvider implements vscode.CustomTextEditorProvider 
         // Debug logging
         window.addEventListener('error', (e) => {
           console.error('Webview error:', e.error);
+          vscode.postMessage({
+            type: 'error',
+            payload: 'Script loading error: ' + e.error.message
+          });
+        });
+
+        // Debug script loading
+        window.addEventListener('load', () => {
+          console.log('Webview loaded');
         });
       </script>
-      <script nonce="${nonce}" src="${scriptUri}"></script>
+      <script nonce="${nonce}" src="${atlaskitVendorUri}" onerror="console.error('Failed to load atlaskit-vendor.js')"></script>
+      <script nonce="${nonce}" src="${reactVendorUri}" onerror="console.error('Failed to load react-vendor.js')"></script>
+      <script nonce="${nonce}" src="${vendorUri}" onerror="console.error('Failed to load vendor.js')"></script>
+      <script nonce="${nonce}" src="${bundleUri}" onerror="console.error('Failed to load bundle.js')"></script>
     </body>
     </html>`;
   }

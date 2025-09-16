@@ -2,7 +2,7 @@
 
 A powerful VS Code and Cursor IDE extension for previewing and editing Atlassian Document Format (ADF) files with live Confluence-style rendering.
 
-![Version](https://img.shields.io/badge/version-0.1.0-blue)
+![Version](https://img.shields.io/badge/version-0.2.7-blue)
 ![VS Code](https://img.shields.io/badge/VS%20Code-%5E1.74.0-007ACC)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
@@ -148,9 +148,29 @@ Configure the extension in VS Code/Cursor settings:
 ## Development
 
 ### Prerequisites
-- Node.js 18+
-- Yarn (recommended package manager)
-- VS Code or Cursor IDE
+- **Node.js**: 18+ (tested with v18.17.0)
+- **Yarn**: 4.7.0+ (preferred package manager)
+- **VS Code or Cursor IDE**: Latest version
+- **@vscode/vsce**: For packaging extensions
+
+### Exact Dependency Versions
+This project uses **pinned exact versions** for consistent builds:
+
+```json
+{
+  "dependencies": {
+    "@atlaskit/adf-schema": "35.14.0",
+    "@atlaskit/editor-common": "109.7.1", 
+    "@atlaskit/media-client-react": "4.1.2",
+    "@atlaskit/media-core": "37.0.0",
+    "@atlaskit/renderer": "123.2.1",
+    "@emotion/react": "11.14.0",
+    "markdown-it": "13.0.2",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  }
+}
+```
 
 ### Project Structure
 ```
@@ -166,33 +186,215 @@ adf-preview/
 │   │   ├── components/    # React components
 │   │   └── styles/        # CSS styles
 │   └── shared/            # Shared types
+├── dist/                  # Built files
+│   ├── extension/         # Compiled extension code
+│   └── webview/           # Compiled webview bundles
+├── build/                 # VSIX packages
 ├── webpack.config.js      # Webpack configuration
 ├── tsconfig.json         # TypeScript config
 └── package.json          # Project dependencies
 ```
 
-### Building from Source
+### Complete Build Instructions
+
+#### 1. Clean Setup (Recommended)
 ```bash
-# Install dependencies
+# Clone repository
+git clone https://github.com/yourusername/adf-preview.git
+cd adf-preview
+
+# Clean any existing dependencies
+rm -rf node_modules yarn.lock
+
+# Install exact dependency versions
 yarn install
 
-# Development build with watch
+# Verify installation
+yarn --version  # Should be 4.7.0+
+```
+
+#### 2. Development Build
+```bash
+# Development build with watch mode
 yarn watch
 
-# Production build
+# Or build components separately
+yarn watch:extension    # Watch extension code
+yarn watch:webview      # Watch React webview
+```
+
+#### 3. Production Build ⚠️ IMPORTANT
+```bash
+# STEP 1: Build webview bundles first
+yarn build:webview
+
+# STEP 2: Build extension 
+yarn build:extension
+
+# OR: Run full build (does both steps)
 yarn build
 
-# Run tests
-yarn test
+# CRITICAL: The webview bundles MUST be built before testing
+# The extension expects these files in dist/webview/:
+# - atlaskit-vendor.js (~7.3MB)
+# - react-vendor.js (~132KB)  
+# - vendor.js (~4MB)
+# - bundle.js (~22KB)
+```
 
-# Run tests with watch mode
-yarn test:watch
+#### 4. Package Extension
+```bash
+# Create VSIX package for distribution
+# IMPORTANT: Use --no-dependencies flag to skip npm dependency validation
+npx @vscode/vsce package --no-dependencies --out build/
 
-# Run tests with coverage
-yarn test:coverage
+# The generated file will be: build/adf-preview-X.X.X.vsix
+# Note: Package includes browser polyfills for webview compatibility
+```
 
-# Package as VSIX
-yarn package
+### ⚙️ Webpack Configuration (v0.2.7)
+
+The extension now includes comprehensive browser polyfills to resolve "process is not defined" errors:
+
+**Key webpack.config.js changes:**
+```javascript
+resolve: {
+  fallback: {
+    "process": require.resolve("process/browser.js"),
+    "path": require.resolve("path-browserify"),
+    "crypto": require.resolve("crypto-browserify"),
+    "stream": require.resolve("stream-browserify"),
+    "buffer": require.resolve("buffer"),
+    "util": require.resolve("util"),
+    // ... additional polyfills for full Node.js compatibility
+  },
+  alias: {
+    'react-intl-next': 'react-intl' // Atlaskit compatibility
+  }
+},
+plugins: [
+  new webpack.ProvidePlugin({
+    process: 'process/browser.js',
+    Buffer: ['buffer', 'Buffer'],
+  }),
+  new webpack.DefinePlugin({
+    'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development'),
+  }),
+]
+```
+
+**Why these changes were needed:**
+- VS Code webviews run in browser environment (no Node.js globals)
+- @atlaskit/renderer and dependencies expect Node.js modules
+- Polyfills bridge the gap between Node.js and browser environments
+
+#### 5. Development Testing (VS Code/Cursor)
+```bash
+# BEFORE testing the extension:
+# 1. Ensure webview is built (critical step)
+yarn build:webview
+
+# 2. Press F5 in VS Code to launch Extension Development Host
+# OR manually install the VSIX:
+code --install-extension build/adf-preview-X.X.X.vsix
+cursor --install-extension build/adf-preview-X.X.X.vsix
+```
+
+#### 5. Install Development Extension
+```bash
+# Install in VS Code
+code --install-extension build/adf-preview-X.X.X.vsix
+
+# Install in Cursor
+cursor --install-extension build/adf-preview-X.X.X.vsix
+```
+
+### Build Verification
+After building, verify the build output:
+```bash
+# Check dist folder structure
+ls -la dist/
+ls -la dist/extension/  # Should contain extension.js
+ls -la dist/webview/    # Should contain bundle.js and vendor files
+
+# Check webview bundles (webpack code splitting)
+ls -la dist/webview/*.js
+# Should include:
+# - atlaskit-vendor.js (~7.3MB - Contains @atlaskit/renderer)
+# - react-vendor.js (~132KB - React/ReactDOM)  
+# - vendor.js (~4MB - Other dependencies)
+# - bundle.js (~22KB - Main application code)
+```
+
+### Build Troubleshooting
+
+#### Dependency Version Conflicts
+If you encounter peer dependency warnings:
+```bash
+# Clean slate approach
+rm -rf node_modules yarn.lock
+yarn install
+
+# Or install with legacy peer deps (if needed)
+yarn install --legacy-peer-deps
+```
+
+#### Packaging Issues
+If `npx @vscode/vsce package` fails:
+```bash
+# Try with more lenient flags
+npx @vscode/vsce package --no-yarn --no-dependencies --out build/
+
+# If still failing, check npm list
+npm list --depth=0 --production
+
+# Clean and retry
+rm -rf node_modules dist
+yarn install
+yarn build
+npx @vscode/vsce package --no-yarn --no-dependencies --out build/
+```
+
+#### Large Bundle Size Warning
+The extension bundles are intentionally large (~11.4MB total) due to @atlaskit/renderer:
+- This is expected and required for full ADF compatibility
+- webpack optimizations reduce bundle size where possible
+- Code splitting separates vendor libraries for better caching
+
+#### Development Mode Issues
+If preview shows "Loading ADF Preview..." and doesn't load:
+
+**🔧 SOLUTION - Recent Fixes Applied:**
+1. **Build webview bundles first** (most common cause):
+   ```bash
+   yarn build:webview
+   # This creates the required JS files the extension needs
+   ```
+
+2. **Fixed duplicate ready messages** - Extension now properly initializes
+3. **Enhanced error reporting** - Script loading failures now show in console
+
+**Common Issues:**
+```bash
+# Issue: Webview stuck on "Loading..." 
+# Fix: Rebuild webview bundles
+yarn build:webview
+
+# Issue: Console shows script loading errors
+# Fix: Check that all bundles exist
+ls -la dist/webview/  # Should show:
+# - atlaskit-vendor.js
+# - react-vendor.js  
+# - vendor.js
+# - bundle.js
+
+# Issue: Extension not activating
+# Fix: Check VS Code console for errors
+# Help -> Toggle Developer Tools -> Console
+
+# Complete rebuild if still having issues:
+yarn clean  # If available, or manually rm -rf dist/
+yarn build
 ```
 
 ### Running Tests
@@ -254,19 +456,70 @@ A valid ADF document must have:
 
 ## Troubleshooting
 
+### 🔧 "Loading ADF Preview..." Fix (v0.2.7)
+**Problem:** Extension shows "Loading ADF Preview..." with "process is not defined" error
+**Root Cause:** Missing Node.js polyfills for browser environment in webview
+
+**✅ FIXED - Complete solution:**
+1. **Install all dependencies** (includes new browser polyfills):
+   ```bash
+   yarn install
+   ```
+2. **Build webview bundles** with updated webpack config:
+   ```bash
+   yarn build:webview
+   ```
+3. **Package and install**:
+   ```bash
+   npx @vscode/vsce package --no-dependencies --out build/
+   cursor --install-extension build/adf-preview-0.2.7.vsix
+   ```
+
+**What was fixed in v0.2.7:**
+- ✅ **Browser polyfills**: Added process, path, crypto, stream, buffer polyfills
+- ✅ **Webpack configuration**: Proper fallbacks for Node.js modules
+- ✅ **React Intl compatibility**: Added alias mapping for react-intl-next
+- ✅ **Atlaskit dependencies**: Fixed missing peer dependencies
+- ✅ **Process injection**: Added ProvidePlugin for global process/Buffer
+- ✅ **Environment variables**: Proper NODE_ENV definition for webview
+
+**Required polyfill packages (automatically installed):**
+```json
+{
+  "devDependencies": {
+    "process": "^0.11.10",
+    "path-browserify": "^1.0.1",
+    "crypto-browserify": "^3.12.1",
+    "stream-browserify": "^3.0.0",
+    "buffer": "^6.0.3",
+    "util": "^0.12.5"
+  },
+  "dependencies": {
+    "@atlaskit/analytics-next": "^11.1.1",
+    "@atlaskit/link-provider": "^4.0.0",
+    "@atlaskit/media-state": "^1.8.0",
+    "react-intl": "^7.1.11"
+  }
+}
+```
+
 ### Extension Not Activating
 - Ensure you have a valid JSON file open
-- Check that the file contains valid ADF structure
+- Check that the file contains valid ADF structure (`type: "doc", version: 1`)
 - Look for errors in Output → ADF Preview
+- **NEW**: Verify webview bundles exist in `dist/webview/`
 
 ### Preview Not Updating
 - Check `adf.preview.autoUpdate` setting
-- Verify the JSON is valid
+- Verify the JSON is valid ADF format
 - Try manually refreshing with Command Palette
+- **NEW**: Rebuild webview if preview was working before: `yarn build:webview`
 
 ### Rendering Issues
-- Ensure all dependencies are installed
+- Ensure all dependencies are installed: `yarn install`
+- **CRITICAL**: Run `yarn build:webview` to create required bundles
 - Check console for errors (Help → Toggle Developer Tools)
+- **NEW**: Check for script loading failures in webview console
 - Try reloading the window
 
 ## Known Limitations

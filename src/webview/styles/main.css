@@ -301,17 +301,132 @@ body {
 .adf-renderer-wrapper h5 { font-size: calc(var(--adf-font-size) * 1.1); }
 .adf-renderer-wrapper h6 { font-size: var(--adf-font-size); }
 
-/* Temporary renderer styles */
-.temp-renderer .notice {
-  background-color: var(--adf-warning-bg);
-  border: 1px solid var(--adf-warning-border);
+/* ADF Panels */
+.panel {
   border-radius: 3px;
-  padding: 12px;
-  margin-bottom: 20px;
-  font-size: 12px;
+  padding: 16px;
+  margin: 16px 0;
+  border-left: 4px solid;
 }
 
-.temp-renderer .unknown-node {
+.panel-info {
+  background-color: #e3f2fd;
+  border-left-color: #2196f3;
+}
+
+.panel-warning {
+  background-color: var(--adf-warning-bg);
+  border-left-color: var(--adf-warning-border);
+}
+
+.panel-error {
+  background-color: var(--adf-error-bg);
+  border-left-color: var(--adf-error-border);
+}
+
+.panel-success {
+  background-color: #e8f5e8;
+  border-left-color: #4caf50;
+}
+
+.panel-note {
+  background-color: #f5f5f5;
+  border-left-color: #9e9e9e;
+}
+
+body.theme-dark .panel-info {
+  background-color: #0d1b2a;
+  color: #e6e6e6;
+}
+
+body.theme-dark .panel-success {
+  background-color: #1b2f1b;
+  color: #e6e6e6;
+}
+
+body.theme-dark .panel-note {
+  background-color: #2d2d2d;
+  color: #e6e6e6;
+}
+
+/* ADF Tables */
+.adf-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  border: 1px solid var(--adf-border-color);
+}
+
+.adf-table th,
+.adf-table td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid var(--adf-border-color);
+}
+
+.adf-table th {
+  background-color: var(--adf-toolbar-bg);
+  font-weight: 600;
+}
+
+.adf-table tr:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+body.theme-dark .adf-table tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* Code blocks */
+.adf-renderer pre {
+  background-color: var(--adf-toolbar-bg);
+  border: 1px solid var(--adf-border-color);
+  border-radius: 4px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 16px 0;
+}
+
+.adf-renderer code {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.9em;
+}
+
+.adf-renderer pre code {
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.adf-renderer :not(pre) > code {
+  background-color: var(--adf-toolbar-bg);
+  border: 1px solid var(--adf-border-color);
+  border-radius: 3px;
+  padding: 2px 4px;
+}
+
+/* Blockquotes */
+.adf-renderer blockquote {
+  border-left: 4px solid var(--adf-border-color);
+  margin: 16px 0;
+  padding-left: 16px;
+  color: var(--adf-text-color);
+  opacity: 0.8;
+  font-style: italic;
+}
+
+/* Links */
+.adf-renderer a {
+  color: var(--adf-button-bg);
+  text-decoration: underline;
+}
+
+.adf-renderer a:hover {
+  color: var(--adf-button-hover);
+}
+
+/* Unknown nodes */
+.unknown-node {
   background-color: var(--adf-error-bg);
   border: 1px solid var(--adf-error-border);
   border-radius: 3px;

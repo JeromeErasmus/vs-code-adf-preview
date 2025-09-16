@@ -48,11 +48,6 @@ const App: React.FC = () => {
     };
 
     window.addEventListener('message', handleMessage);
-    
-    // Send ready message to extension
-    if (window.vscode) {
-      window.vscode.postMessage({ type: 'ready' });
-    }
 
     return () => {
       window.removeEventListener('message', handleMessage);

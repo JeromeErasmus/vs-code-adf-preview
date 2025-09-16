@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
@@ -19,7 +20,32 @@ module.exports = (env, argv) => {
       extensions: ['.ts', '.tsx', '.js', '.jsx'],
       alias: {
         '@': path.resolve(__dirname, 'src'),
-        '@shared': path.resolve(__dirname, 'src/shared')
+        '@shared': path.resolve(__dirname, 'src/shared'),
+        'react-intl-next': 'react-intl'
+      },
+      fallback: {
+        "process": require.resolve("process/browser.js"),
+        "path": require.resolve("path-browserify"),
+        "os": require.resolve("os-browserify/browser"),
+        "crypto": require.resolve("crypto-browserify"),
+        "stream": require.resolve("stream-browserify"),
+        "buffer": require.resolve("buffer"),
+        "util": require.resolve("util"),
+        "url": require.resolve("url"),
+        "querystring": require.resolve("querystring-es3"),
+        "fs": false,
+        "net": false,
+        "tls": false,
+        "assert": require.resolve("assert"),
+        "constants": require.resolve("constants-browserify"),
+        "domain": require.resolve("domain-browser"),
+        "events": require.resolve("events"),
+        "http": require.resolve("stream-http"),
+        "https": require.resolve("https-browserify"),
+        "punycode": require.resolve("punycode"),
+        "string_decoder": require.resolve("string_decoder"),
+        "vm": require.resolve("vm-browserify"),
+        "zlib": require.resolve("browserify-zlib")
       }
     },
     module: {
@@ -45,6 +71,14 @@ module.exports = (env, argv) => {
     plugins: [
       // We don't use HtmlWebpackPlugin here since VS Code provides the HTML
       // The webview HTML is generated in the extension code
+      new webpack.ProvidePlugin({
+        process: 'process/browser.js',
+        Buffer: ['buffer', 'Buffer'],
+      }),
+      new webpack.DefinePlugin({
+        'process.env': JSON.stringify({}),
+        'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development'),
+      }),
     ],
     optimization: {
       minimize: isProduction,

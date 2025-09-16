@@ -40,11 +40,16 @@ function initializeApp() {
   );
 
   console.log('React app rendered, notifying extension...');
-  // Notify extension that webview is ready
-  if (window.vscode) {
-    window.vscode.postMessage({ type: 'ready' });
-    console.log('Ready message sent to extension');
-  } else {
-    console.error('vscode API not available');
-  }
+  
+  // Add a small delay to ensure the webview is fully initialized
+  setTimeout(() => {
+    // Notify extension that webview is ready
+    if (window.vscode) {
+      console.log('Sending ready message to extension...');
+      window.vscode.postMessage({ type: 'ready' });
+      console.log('Ready message sent to extension');
+    } else {
+      console.error('vscode API not available - this should not happen in VS Code webview');
+    }
+  }, 100);
 }
