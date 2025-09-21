@@ -95,7 +95,7 @@ A powerful VS Code and Cursor IDE extension for previewing and editing Atlassian
 After installation, verify the extension is working:
 1. Open an ADF file or create a new one
 2. Paste sample ADF content (see Usage section)
-3. Right-click → "Check and Preview as ADF"
+3. Right-click → "Open with ADF Preview"
 4. The ADF Preview should open showing rendered content
 
 ## Usage
@@ -105,7 +105,6 @@ After installation, verify the extension is working:
 2. **Manual Opening**: 
    - Right-click on any ADF file → "Open with ADF Preview"
    - Command Palette → "ADF: Open Preview"
-3. **Check and Preview**: Right-click on ADF file → "Check and Preview as ADF"
 
 ### Supported ADF Elements
 - ✅ Text formatting (bold, italic, underline, strike, code)
@@ -126,7 +125,6 @@ After installation, verify the extension is working:
 | Command | Description |
 |---------|-------------|
 | `ADF: Open Preview` | Open current ADF file in ADF Preview |
-| `ADF: Check and Preview` | Validate and open as ADF |
 | `ADF: Validate Document` | Check if document is valid ADF |
 | `ADF: Export as HTML` | Export current preview to HTML |
 | `ADF: Export as Markdown` | Export current preview to Markdown |
@@ -567,4 +565,6 @@ yarn test:coverage  # Generate test coverage
 ```
 
 ---
-Made with ❤️ for the Confluence and developer community
+
+## Important references:
+https://developer.atlassian.com/cloud/jira/platform/apis/document/structure/

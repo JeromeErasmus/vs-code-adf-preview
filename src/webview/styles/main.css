@@ -299,3 +299,17 @@ body {
   background-color: var(--adf-button-hover);
 }
 
+/* ADF Content Styles */
+blockquote {
+  margin: 16px 0;
+  padding: 16px 20px;
+  border-left: 4px solid var(--adf-border-color);
+  background-color: var(--adf-toolbar-bg);
+  font-style: italic;
+  color: var(--adf-text-color);
+}
+
+blockquote p {
+  margin: 0;
+}
+

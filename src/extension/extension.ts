@@ -45,59 +45,6 @@ export function activate(context: vscode.ExtensionContext) {
     console.log('Custom editor command executed');
   });
 
-  const checkAndPreviewCommand = vscode.commands.registerCommand('adf.checkAndPreview', async () => {
-    // Very first debug message
-    vscode.window.showInformationMessage('🚀 ADF: Check and Preview command started!');
-    console.log('=== ADF checkAndPreview command executed ===');
-    
-    const activeEditor = vscode.window.activeTextEditor;
-    if (!activeEditor) {
-      vscode.window.showErrorMessage('No active editor found');
-      return;
-    }
-
-    const document = activeEditor.document;
-    const isValidFile = document.uri.fsPath.endsWith('.adf');
-    
-    if (!isValidFile) {
-      vscode.window.showErrorMessage('Current file is not an ADF file (*.adf)');
-      return;
-    }
-
-    try {
-      const content = document.getText();
-      const jsonData = JSON.parse(content);
-      
-      console.log('Parsed JSON successfully, opening preview for:', document.uri.fsPath);
-      vscode.window.showInformationMessage('Opening ADF Preview...');
-      
-      // Check if it's an ADF document
-      const validator = new ADFValidator();
-      const validationResult = validator.validateDocument(jsonData);
-      
-      if (validationResult.isValid) {
-        // Open with custom editor
-        console.log('ADF validation passed, executing openWith command');
-        await vscode.commands.executeCommand('vscode.openWith', document.uri, 'adf.preview');
-        console.log('openWith command completed');
-      } else {
-        const choice = await vscode.window.showWarningMessage(
-          'This JSON file does not appear to be a valid ADF document. Open anyway?',
-          'Open',
-          'Cancel'
-        );
-        
-        if (choice === 'Open') {
-          await vscode.commands.executeCommand('vscode.openWith', document.uri, 'adf.preview');
-        }
-      }
-    } catch (error) {
-      console.error('Error in checkAndPreview command:', error);
-      vscode.window.showErrorMessage(`❌ ADF Preview Error: ${error}`);
-    }
-    
-    console.log('=== ADF checkAndPreview command completed ===');
-  });
 
   const validateDocumentCommand = vscode.commands.registerCommand('adf.validateDocument', async () => {
     const activeEditor = vscode.window.activeTextEditor;
@@ -202,7 +149,6 @@ export function activate(context: vscode.ExtensionContext) {
     debugLogCommand,
     providerRegistration,
     openPreviewCommand,
-    checkAndPreviewCommand,
     validateDocumentCommand,
     exportAsHTMLCommand,
     exportAsMarkdownCommand,

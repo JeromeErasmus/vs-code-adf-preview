@@ -23,7 +23,6 @@
   "activationEvents": [
     "onCustomEditor:adf.preview",
     "onCommand:adf.openPreview",
-    "onCommand:adf.checkAndPreview",
     "onLanguage:json"
   ],
   "main": "./dist/extension/extension.js",
@@ -45,11 +44,6 @@
       {
         "command": "adf.openPreview",
         "title": "Open ADF Preview",
-        "category": "ADF"
-      },
-      {
-        "command": "adf.checkAndPreview",
-        "title": "Check and Preview as ADF",
         "category": "ADF"
       },
       {
@@ -84,13 +78,6 @@
       }
     ],
     "menus": {
-      "editor/context": [
-        {
-          "when": "resourcePath =~ /\\.adf$/",
-          "command": "adf.checkAndPreview",
-          "group": "navigation"
-        }
-      ],
       "commandPalette": [
         {
           "command": "adf.exportAsHTML",
