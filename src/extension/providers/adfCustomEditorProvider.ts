@@ -3,6 +3,13 @@ import * as path from 'path';
 import { ADFValidator } from '../validators/adfValidator';
 import { ADFDocument, WebviewMessage, UpdateMessage, ExportMessage } from '../../shared/types';
 import { exportAsHTML, exportAsMarkdown } from '../utils/exportUtils';
+import { 
+  processContent, 
+  detectFileType, 
+  FileType, 
+  createFallbackDocument,
+  convertAdfToMarkdown 
+} from '../../shared/converters/markdownConverter';
 
 export class ADFCustomEditorProvider implements vscode.CustomTextEditorProvider {
   private static readonly viewType = 'adf.preview';
@@ -41,7 +48,6 @@ export class ADFCustomEditorProvider implements vscode.CustomTextEditorProvider 
     _token: vscode.CancellationToken
   ): Promise<void> {
     console.log('resolveCustomTextEditor called for:', document.uri.fsPath);
-    vscode.window.showInformationMessage(`Resolving custom editor for: ${document.fileName}`);
     
     this.currentDocument = document;
     this.currentWebviewPanel = webviewPanel;
@@ -141,45 +147,52 @@ export class ADFCustomEditorProvider implements vscode.CustomTextEditorProvider 
     }
 
     // Set new timer for debounced update
-    this.updateTimer = setTimeout(() => {
+    this.updateTimer = setTimeout(async () => {
       try {
         const text = document.getText();
-        console.log('updateWebview - parsing text (first 100 chars):', text.substring(0, 100));
-        const jsonData = JSON.parse(text);
+        const filePath = document.uri.fsPath;
+        const fileType = detectFileType(filePath);
+        
+        console.log(`Processing ${fileType} file: ${filePath}`);
 
-        // Validate the document
-        const validator = new ADFValidator();
-        const validationResult = validator.validateDocument(jsonData);
+        // Process content based on file type
+        const result = await processContent(text, filePath);
 
-        if (validationResult.isValid) {
-          // Send valid document to webview
+        if (result.success && result.document) {
+          // Send valid document to webview with file type info
           const updateMessage: UpdateMessage = {
             type: 'update',
             payload: {
-              document: jsonData as ADFDocument,
+              document: result.document,
               theme: config.get<'light' | 'dark' | 'auto'>('theme', 'light'),
-              fontSize: config.get<number>('fontSize', 14)
+              fontSize: config.get<number>('fontSize', 14),
+              fileType: result.fileType
             }
           };
           webviewPanel.webview.postMessage(updateMessage);
         } else {
-          // Send validation errors to webview
-          webviewPanel.webview.postMessage({
-            type: 'error',
+          // Send error with fallback document
+          const fallbackDoc = createFallbackDocument(text, result.error || 'Unknown error');
+          const updateMessage: UpdateMessage = {
+            type: 'update',
             payload: {
-              errors: validationResult.errors,
-              warnings: validationResult.warnings
+              document: fallbackDoc,
+              theme: config.get<'light' | 'dark' | 'auto'>('theme', 'light'),
+              fontSize: config.get<number>('fontSize', 14),
+              fileType: result.fileType,
+              error: result.error
             }
-          });
+          };
+          webviewPanel.webview.postMessage(updateMessage);
         }
       } catch (error) {
-        // JSON parse error
+        // Unexpected error
         webviewPanel.webview.postMessage({
           type: 'error',
           payload: {
             errors: [{
               path: '',
-              message: `JSON Parse Error: ${error}`
+              message: `Unexpected Error: ${error}`
             }],
             warnings: []
           }

@@ -60,6 +60,8 @@ export interface UpdateMessage extends WebviewMessage {
     document: ADFDocument;
     theme?: 'light' | 'dark' | 'auto';
     fontSize?: number;
+    fileType?: 'adf' | 'md';
+    error?: string;
   };
 }
 

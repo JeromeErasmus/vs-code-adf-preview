@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { ADFCustomEditorProvider } from './providers/adfCustomEditorProvider';
 import { ADFValidator } from './validators/adfValidator';
 import { ADFDocument } from '../shared/types';
+import { processContent, detectFileType, FileType } from '../shared/converters/markdownConverter';
 
 let customEditorProvider: ADFCustomEditorProvider;
 
@@ -31,16 +32,15 @@ export function activate(context: vscode.ExtensionContext) {
     }
 
     const document = activeEditor.document;
-    const isValidFile = document.uri.fsPath.endsWith('.adf');
+    const isValidFile = document.uri.fsPath.endsWith('.adf') || document.uri.fsPath.endsWith('.md');
     
     if (!isValidFile) {
-      vscode.window.showErrorMessage('Current file is not an ADF file (*.adf)');
+      vscode.window.showErrorMessage('Current file is not an ADF or Markdown file (*.adf, *.md)');
       return;
     }
 
     // Open with custom editor
     console.log('Opening custom editor for:', document.uri.fsPath);
-    vscode.window.showInformationMessage('Opening ADF Preview...');
     await vscode.commands.executeCommand('vscode.openWith', document.uri, 'adf.preview');
     console.log('Custom editor command executed');
   });
@@ -54,22 +54,39 @@ export function activate(context: vscode.ExtensionContext) {
     }
 
     const document = activeEditor.document;
-    const isValidFile = document.uri.fsPath.endsWith('.adf');
+    const isValidFile = document.uri.fsPath.endsWith('.adf') || document.uri.fsPath.endsWith('.md');
     
     if (!isValidFile) {
-      vscode.window.showErrorMessage('Current file is not an ADF file (*.adf)');
+      vscode.window.showErrorMessage('Current file is not an ADF or Markdown file (*.adf, *.md)');
       return;
     }
 
     try {
       const content = document.getText();
-      const jsonData = JSON.parse(content);
+      const filePath = document.uri.fsPath;
+      const fileType = detectFileType(filePath);
+      
+      let adfDocument: ADFDocument;
+      
+      if (fileType === FileType.MARKDOWN) {
+        // Convert markdown to ADF first
+        const conversionResult = await processContent(content, filePath);
+        if (!conversionResult.success || !conversionResult.document) {
+          vscode.window.showErrorMessage(`Markdown conversion failed: ${conversionResult.error}`);
+          return;
+        }
+        adfDocument = conversionResult.document;
+      } else {
+        // Parse ADF JSON directly
+        adfDocument = JSON.parse(content);
+      }
       
       const validator = new ADFValidator();
-      const validationResult = validator.validateDocument(jsonData);
+      const validationResult = validator.validateDocument(adfDocument);
       
       if (validationResult.isValid) {
-        vscode.window.showInformationMessage('✅ Valid ADF document');
+        const fileTypeLabel = fileType === FileType.MARKDOWN ? 'Markdown' : 'ADF';
+        vscode.window.showInformationMessage(`✅ Valid ${fileTypeLabel} document`);
       } else {
         const errorMessages = validationResult.errors.map(e => e.message).join('\n');
         vscode.window.showErrorMessage(`Invalid ADF document:\n${errorMessages}`);

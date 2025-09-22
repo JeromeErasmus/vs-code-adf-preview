@@ -11,6 +11,7 @@ const App: React.FC = () => {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [fontSize, setFontSize] = useState<number>(14);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [fileType, setFileType] = useState<'adf' | 'md'>('adf');
 
   // Handle messages from extension
   useEffect(() => {
@@ -28,6 +29,9 @@ const App: React.FC = () => {
           }
           if (updateMsg.payload.fontSize) {
             setFontSize(updateMsg.payload.fontSize);
+          }
+          if (updateMsg.payload.fileType) {
+            setFileType(updateMsg.payload.fileType);
           }
           setIsLoading(false);
           break;
@@ -136,6 +140,12 @@ const App: React.FC = () => {
     <ErrorBoundary>
       <div className="adf-preview-container">
         <div className="adf-preview-toolbar">
+          <div className="toolbar-group">
+            <span className="toolbar-label">Source:</span>
+            <span className={`file-type-badge ${fileType}`}>
+              {fileType === 'md' ? '📝 Markdown' : '📄 ADF'}
+            </span>
+          </div>
           <div className="toolbar-group">
             <button 
               className="toolbar-button close-button"

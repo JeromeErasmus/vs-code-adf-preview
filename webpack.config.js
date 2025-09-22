@@ -130,11 +130,13 @@ module.exports = (env, argv) => {
       vscode: 'commonjs vscode'
     },
     resolve: {
-      extensions: ['.ts', '.js'],
+      extensions: ['.ts', '.js', '.mjs'],
       alias: {
         '@': path.resolve(__dirname, 'src'),
         '@shared': path.resolve(__dirname, 'src/shared')
-      }
+      },
+      mainFields: ['module', 'main'],
+      conditionNames: ['import', 'module', 'require', 'default']
     },
     module: {
       rules: [
@@ -142,11 +144,21 @@ module.exports = (env, argv) => {
           test: /\.ts$/,
           use: 'ts-loader',
           exclude: /node_modules/
+        },
+        {
+          test: /\.m?js$/,
+          resolve: {
+            fullySpecified: false
+          },
+          include: /node_modules\/extended-markdown-adf-parser/
         }
       ]
     },
     optimization: {
       minimize: false // Don't minimize extension code for better debugging
+    },
+    experiments: {
+      topLevelAwait: true
     }
   };
 

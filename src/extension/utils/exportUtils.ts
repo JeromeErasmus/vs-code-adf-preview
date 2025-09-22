@@ -1,5 +1,6 @@
 import { ADFDocument, ADFEntity } from '../../shared/types';
 import MarkdownIt from 'markdown-it';
+import { convertAdfToMarkdown } from '../../shared/converters/markdownConverter';
 
 export async function exportAsHTML(document: ADFDocument, includeStyles: boolean = true): Promise<string> {
   const content = convertADFToHTML(document);
@@ -257,7 +258,8 @@ function escapeHtml(text: string): string {
 }
 
 export async function exportAsMarkdown(document: ADFDocument): Promise<string> {
-  return convertADFToMarkdown(document);
+  // Use the extended-markdown-adf-parser for 100% fidelity conversion
+  return convertAdfToMarkdown(document);
 }
 
 function convertADFToMarkdown(node: ADFEntity, depth: number = 0): string {

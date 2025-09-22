@@ -313,3 +313,40 @@ blockquote p {
   margin: 0;
 }
 
+/* File Type Badge */
+.file-type-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  background-color: var(--adf-toolbar-bg);
+  border: 1px solid var(--adf-border-color);
+  color: var(--adf-text-color);
+}
+
+.file-type-badge.md {
+  background-color: #e3f2fd;
+  border-color: #2196f3;
+  color: #1976d2;
+}
+
+.file-type-badge.adf {
+  background-color: #f3e5f5;
+  border-color: #9c27b0;
+  color: #7b1fa2;
+}
+
+body.theme-dark .file-type-badge.md {
+  background-color: #1e3a5f;
+  border-color: #2196f3;
+  color: #64b5f6;
+}
+
+body.theme-dark .file-type-badge.adf {
+  background-color: #4a148c;
+  border-color: #9c27b0;
+  color: #ba68c8;
+}
+
