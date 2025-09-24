@@ -20,15 +20,6 @@ Preview and edit Atlassian Document Format (ADF) files and ADF-enhanced Markdown
 3. Type "Extensions: Install from VSIX" and select the downloaded file
 4. Restart VS Code
 
-**Command Line:**
-```bash
-# From marketplace (when available)
-code --install-extension jerome-erasmus.adf-preview
-
-# From VSIX file
-code --install-extension adf-preview-0.3.0.vsix
-```
-
 ## Quick Start
 
 1. **Create a Markdown file** with ADF content:
@@ -60,15 +51,45 @@ code --install-extension adf-preview-0.3.0.vsix
 
 ## Supported Elements
 
-| Element | Markdown Syntax | Description |
-|---------|----------------|-------------|
-| **Panels** | `~~~panel type=info~~~` | Info, warning, error, success, note panels |
-| **Tasks** | `- [ ] Task` | Checkbox task lists |
-| **Tables** | `\| Header \| Column \|` | Data tables with formatting |
-| **Code** | ``` ```language ``` | Syntax-highlighted code blocks |
-| **Expand** | `~~~expand title="Title"~~~` | Collapsible sections |
-| **Quotes** | `> quoted text` | Blockquote content |
-| **Formatting** | `**bold**` `*italic*` `` `code` `` | Text formatting |
+| Element Category | Element | Markdown Syntax | Description |
+|------------------|---------|----------------|-------------|
+| **Document Structure** | Headings | `# ## ### #### ##### ######` | Document headings (H1-H6) |
+| | Paragraphs | Regular text | Text paragraphs |
+| | Line Breaks | Double space + newline | Hard line breaks |
+| | Horizontal Rules | `---` or `***` | Horizontal dividers |
+| **Text Formatting** | Bold | `**text**` or `__text__` | Strong emphasis |
+| | Italic | `*text*` or `_text_` | Italic emphasis |
+| | Strikethrough | `~~text~~` | Strikethrough text |
+| | Underline | `<u>text</u>` | Underlined text |
+| | Inline Code | `` `code` `` | Inline code formatting |
+| | Subscript | `<sub>text</sub>` | Subscript text |
+| | Superscript | `<sup>text</sup>` | Superscript text |
+| **Links and References** | Links | `[text](url)` | Hyperlinks |
+| | Mentions | `@username` | User mentions |
+| | Date | ADF date syntax | Date references |
+| | Status | ADF status syntax | Status badges |
+| **Lists** | Bullet Lists | `- * +` | Unordered lists |
+| | Ordered Lists | `1. 2. 3.` | Numbered lists |
+| | Task Lists | `- [ ] - [x]` | Checkbox lists |
+| | Nested Lists | Indented items | Multi-level lists |
+| **Tables** | Tables | `\| Header \| Column \|` | Data tables |
+| | Table Headers | First table row | Column headers |
+| | Table Rows | `\|---|---\|` | Table separator |
+| | Table Cells | Cell content | Individual cells |
+| **Code and Quotes** | Code Blocks | ``` ```language ``` | Syntax-highlighted code |
+| | Blockquotes | `> quoted text` | Quoted content |
+| **ADF Panels** | Info Panels | `~~~panel type=info~~~` | Information panels |
+| | Warning Panels | `~~~panel type=warning~~~` | Warning panels |
+| | Error Panels | `~~~panel type=error~~~` | Error panels |
+| | Success Panels | `~~~panel type=success~~~` | Success panels |
+| | Note Panels | `~~~panel type=note~~~` | Note panels |
+| **Advanced Elements** | Expand Sections | `~~~expand title="Title"~~~` | Collapsible content |
+| | Emoji | `:emoji_name:` | Unicode emojis |
+| | Inline Cards | ADF card syntax | Inline card references |
+| **Media Elements** | Images | `![alt](src)` | Image references |
+| | Media Single | `![alt](media:id)` | Single media items |
+| | Media Groups | ADF media syntax | Media galleries |
+| | File Attachments | ADF attachment syntax | File references |
 
 ## Features
 
@@ -77,7 +98,6 @@ code --install-extension adf-preview-0.3.0.vsix
 - **Export Options**: HTML, Markdown, and JSON export
 - **Template Library**: Meeting notes, requirements docs, technical specs
 - **Validation**: Real-time ADF structure checking
-- **Theme Support**: Auto-sync with VS Code light/dark themes
 
 ## Commands
 
@@ -118,5 +138,3 @@ Add to your VS Code `settings.json` (File → Preferences → Settings → Open 
 **Need help?** Check the [complete documentation](docs/README.md) or report issues on [GitHub](https://github.com/JeromeErasmus/vs-code-adf-preview/issues).
 
 ---
-
-**Built with @atlaskit/renderer for authentic Confluence rendering**
