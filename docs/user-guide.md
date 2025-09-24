@@ -44,73 +44,60 @@ This guide provides practical instructions for using the ADF Preview extension's
 
 > 📖 **Complete ADF Markdown Reference**: For comprehensive documentation on all ADF markdown extensions and syntax, see the [Extended Markdown ADF Parser Package Documentation](https://www.npmjs.com/package/extended-markdown-adf-parser)
 
+### Text Formatting
+
+ADF supports rich text formatting including bold, italic, underline, strikethrough, code, and more. Text can be combined with links, mentions, and inline elements.
+
+> 📖 **Text Formatting Documentation**: See [Text Formatting](https://jeromeerasmus.gitbook.io/extended-markdown-adf-parser/text-formatting) for complete syntax including emphasis, strong text, inline code, and advanced formatting options.
+
+### Headings
+
+Create document structure using headings from H1 through H6. Headings support custom attributes and can include rich text content.
+
+> 📖 **Heading Documentation**: See [Heading Specifications](https://jeromeerasmus.gitbook.io/extended-markdown-adf-parser/core-elements/element-specifications-headings) for syntax and advanced heading features.
+
 ### Panel Syntax
 
-Create visually distinct information panels using proper ADF panel syntax:
+Create visually distinct information panels using ADF panel syntax. Panels provide rich content containers with semantic meaning and visual styling.
 
-```markdown
-~~~panel type=info title="Information"
-This creates a blue information panel with optional title
-~~~
+**Available Panel Types:**
+- **Info Panel** - Blue styling for informational content
+- **Warning Panel** - Yellow styling for cautionary content  
+- **Success Panel** - Green styling for positive feedback
+- **Note Panel** - Gray styling for additional context
+- **Error Panel** - Red styling for critical information
 
-~~~panel type=warning title="Warning"
-This creates a yellow warning panel with optional title
-~~~
-
-~~~panel type=success title="Success"
-This creates a green success panel with optional title
-~~~
-
-~~~panel type=note title="Note"  
-This creates a gray note panel with optional title
-~~~
-
-~~~panel type=error title="Error"
-This creates a red error panel with optional title
-~~~
-```
-
-**Simplified syntax** (without title):
-```markdown
-~~~panel type=info
-Panel content without title
-~~~
-```
+> 📖 **Complete Panel Documentation**: See [Panel Specifications](https://jeromeerasmus.gitbook.io/extended-markdown-adf-parser/adf-extensions/element-specifications-panels) for syntax examples, custom titles, and advanced panel features.
 
 ### Task Lists
 
-Create interactive task lists:
+Create interactive task lists with checkboxes for tracking completion status. Task lists support nested items and rich content.
 
-```markdown
-## My Tasks
-- [x] Completed task
-- [ ] Pending task
-- [ ] Another pending task
-```
+> 📖 **List Documentation**: See [Lists](https://jeromeerasmus.gitbook.io/extended-markdown-adf-parser/lists) for complete syntax including bullet lists, numbered lists, and task lists with advanced features.
 
-### Tables with ADF Support
+### Tables
 
-```markdown
-| Name | Status | Progress |
-|------|---------|----------|
-| Task 1 | ✅ Done | 100% |
-| Task 2 | ⚠️ In Progress | 75% |
-| Task 3 | 📝 Pending | 0% |
-```
+Create structured data tables with headers, rows, and rich content. Tables support text formatting, alignment, and complex layouts including merged cells.
+
+> 📖 **Table Documentation**: See [Table Specifications](https://jeromeerasmus.gitbook.io/extended-markdown-adf-parser/block-elements/element-specifications-tables) for complete syntax including column alignment, cell merging, and advanced table features.
 
 ### Code Blocks
 
-```markdown
-\```javascript
-function adfExample() {
-  return {
-    type: "doc",
-    version: 1,
-    content: []
-  };
-}
-\```
-```
+Display formatted code with syntax highlighting for 100+ programming languages. Code blocks preserve indentation and line breaks while providing visual styling.
+
+> 📖 **Code Block Documentation**: See [Code Block Specifications](https://jeromeerasmus.gitbook.io/extended-markdown-adf-parser/block-elements/element-specifications-code-blocks) for language support, syntax highlighting options, and advanced code block features.
+
+### Media Elements
+
+Embed images, videos, and file attachments in your documents. Media elements support dimensions, captions, and accessibility attributes.
+
+> 📖 **Media Documentation**: See [Media Elements](https://jeromeerasmus.gitbook.io/extended-markdown-adf-parser/media-elements) for syntax including image references, file attachments, and media galleries.
+
+### Blockquotes
+
+Create quoted content with proper attribution and nested quote support. Blockquotes can contain rich content and multiple paragraphs.
+
+> 📖 **Blockquote Documentation**: See [Blockquote Specifications](https://jeromeerasmus.gitbook.io/extended-markdown-adf-parser/block-elements/element-specifications-blockquotes) for syntax and advanced blockquote features.
 
 ## Using Code Completion
 

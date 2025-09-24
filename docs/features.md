@@ -226,34 +226,6 @@ Project status as of {{DATE}}
 ### Command Palette
 All commands are available via Command Palette (`Ctrl+Shift+P` / `Cmd+Shift+P`)
 
-## Theme Support
-
-The extension supports all VS Code and Cursor themes:
-- **Light Themes**: Clean, bright rendering
-- **Dark Themes**: Proper contrast and readability  
-- **High Contrast**: Accessibility-focused rendering
-- **Custom Themes**: Adapts to user color schemes
-
-## Performance Features
-
-### Optimization
-- **Debounced Updates**: Prevents excessive re-rendering
-- **Lazy Loading**: Templates and schemas load on demand
-- **Worker Threads**: Background validation processing
-- **Caching**: Validation results and completions cached
-
-### Scalability
-- **Large Documents**: Handles documents up to 10MB efficiently
-- **Complex Structures**: Optimized for nested elements
-- **Memory Management**: Automatic cleanup of unused resources
-
-## Accessibility
-
-- **Screen Reader Support**: Semantic HTML output
-- **Keyboard Navigation**: Full keyboard accessibility
-- **High Contrast**: Supports high contrast modes
-- **ARIA Labels**: Proper accessibility attributes
-
 ## Next Steps
 
 - See the [User Guide](user-guide.md) for detailed usage instructions
