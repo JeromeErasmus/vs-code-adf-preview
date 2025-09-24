@@ -52,43 +52,43 @@
     "commands": [
       {
         "command": "adf.openPreview",
-        "title": "Open Preview",
+        "title": "ADF: Open Preview",
         "category": "ADF",
         "icon": "$(open-preview)"
       },
       {
         "command": "adf.closePreview",
-        "title": "Close Preview",
+        "title": "ADF: Close Preview",
         "category": "ADF"
       },
       {
         "command": "adf.exportAsHTML",
-        "title": "Export as HTML",
+        "title": "ADF: Export as HTML",
         "category": "ADF"
       },
       {
         "command": "adf.exportAsMarkdown",
-        "title": "Export as Markdown",
+        "title": "ADF: Export as Markdown",
         "category": "ADF"
       },
       {
         "command": "adf.validateDocument",
-        "title": "Validate Document",
+        "title": "ADF: Validate Document",
         "category": "ADF"
       },
       {
         "command": "adf.test",
-        "title": "Test Extension",
+        "title": "ADF: Test Extension",
         "category": "ADF"
       },
       {
         "command": "adf.debugLog",
-        "title": "Write Debug Log",
+        "title": "ADF: Write Debug Log",
         "category": "ADF"
       },
       {
         "command": "adf.createMarkdownFromTemplate",
-        "title": "Create from Template",
+        "title": "ADF: Create from Template",
         "category": "ADF",
         "icon": "$(file-add)"
       }
@@ -112,7 +112,14 @@
       "editor/title": [
         {
           "command": "adf.openPreview",
-          "when": "resourceExtname == .md",
+          "when": "resourceExtname == .md || resourceExtname == .adf",
+          "group": "navigation"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "adf.openPreview",
+          "when": "resourceExtname == .md || resourceExtname == .adf",
           "group": "navigation"
         }
       ],
