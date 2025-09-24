@@ -13,19 +13,19 @@ export class PreviewTabManager {
       existingPanel.dispose();
     }
     
-    // Open new preview in current tab group
+    // Open new preview using the custom editor
     try {
+      // Force open with ADF Preview custom editor
       await vscode.commands.executeCommand(
         'vscode.openWith',
         sourceUri,
         'adf.preview'
       );
       
-      // Note: We can't directly get the panel from the command above
-      // The custom editor provider will handle the webview creation
       console.log(`Preview opened for: ${path.basename(sourceUri.path)}`);
     } catch (error) {
-      vscode.window.showErrorMessage(`Failed to open preview: ${error}`);
+      vscode.window.showErrorMessage(`Failed to open ADF preview: ${error}`);
+      console.error('Preview opening error:', error);
     }
   }
 
