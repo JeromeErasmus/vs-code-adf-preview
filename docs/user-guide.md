@@ -275,18 +275,10 @@ Run comprehensive validation:
 
 ## Advanced Usage
 
-### Document Inspector
-
-For complex documents, use the Document Inspector:
-1. Command Palette → "ADF: Inspect Document"
-2. View document structure as a tree
-3. Navigate to specific nodes
-4. Examine node properties and attributes
-
 ### Debug Information
 
 Export debug information for troubleshooting:
-1. Command Palette → "ADF: Debug Info"
+1. Command Palette → "ADF: Write Debug Log"
 2. Saves comprehensive diagnostic data
 3. Useful for reporting issues
 

@@ -514,7 +514,7 @@ When reporting issues, include:
 
 ```bash
 # Generate debug info
-Command Palette → "ADF: Debug Info"
+Command Palette → "ADF: Write Debug Log"
 # Saves comprehensive diagnostic data
 ```
 

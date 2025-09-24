@@ -2,8 +2,12 @@
   "name": "adf-preview",
   "displayName": "ADF Preview for Confluence",
   "description": "Preview and edit Atlassian Document Format (ADF) files with live Confluence-style rendering",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "publisher": "jerome-erasmus",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jerome-erasmus/vs-code-adf-preview.git"
+  },
   "engines": {
     "vscode": "^1.74.0"
   },
@@ -54,7 +58,7 @@
       },
       {
         "command": "adf.closePreview",
-        "title": "Close ADF Preview",
+        "title": "Close Preview",
         "category": "ADF"
       },
       {
@@ -69,7 +73,7 @@
       },
       {
         "command": "adf.validateDocument",
-        "title": "Validate ADF Document",
+        "title": "Validate Document",
         "category": "ADF"
       },
       {

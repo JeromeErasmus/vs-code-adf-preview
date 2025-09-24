@@ -208,8 +208,7 @@ Project status as of {{DATE}}
 | `ADF: Validate Document` | Run comprehensive validation | - |
 | `ADF: Export as HTML` | Export current preview to HTML | - |
 | `ADF: Export as Markdown` | Export to standard Markdown | - |
-| `ADF: Inspect Document` | Open document structure inspector | - |
-| `ADF: Debug Info` | Export debug information | - |
+| `ADF: Write Debug Log` | Export debug information | - |
 
 ## Menus and Context Actions
 

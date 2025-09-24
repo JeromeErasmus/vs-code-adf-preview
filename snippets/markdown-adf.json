@@ -1,36 +1,46 @@
 {
   "ADF Info Panel": {
-    "prefix": "info",
+    "prefix": ["info", "panel-info"],
     "body": [
-      "> ℹ️ **Info:** $1"
+      "~~~panel type=info title=\"${1:Information Panel}\"",
+      "$2",
+      "~~~"
     ],
     "description": "Insert ADF info panel in markdown"
   },
   "ADF Warning Panel": {
-    "prefix": "warn",
+    "prefix": ["warn", "panel-warn", "panel-warning"],
     "body": [
-      "> ⚠️ **Warning:** $1"
+      "~~~panel type=warning title=\"${1:Warning Panel}\"",
+      "$2",
+      "~~~"
     ],
     "description": "Insert ADF warning panel in markdown"
   },
   "ADF Success Panel": {
-    "prefix": "success",
+    "prefix": ["success", "panel-success"],
     "body": [
-      "> ✅ **Success:** $1"
+      "~~~panel type=success title=\"${1:Success Panel}\"",
+      "$2",
+      "~~~"
     ],
     "description": "Insert ADF success panel in markdown"
   },
   "ADF Note Panel": {
-    "prefix": "note",
+    "prefix": ["note", "panel-note"],
     "body": [
-      "> 📝 **Note:** $1"
+      "~~~panel type=note title=\"${1:Note Panel}\"",
+      "$2",
+      "~~~"
     ],
     "description": "Insert ADF note panel in markdown"
   },
   "ADF Error Panel": {
-    "prefix": "error",
+    "prefix": ["error", "panel-error"],
     "body": [
-      "> ❌ **Error:** $1"
+      "~~~panel type=error title=\"${1:Error Panel}\"",
+      "$2",
+      "~~~"
     ],
     "description": "Insert ADF error panel in markdown"
   },
@@ -58,9 +68,10 @@
     "body": [
       "# ${1:Meeting Title}",
       "",
-      "> ℹ️ **Info:**",
-      "> Date: ${2:$CURRENT_YEAR-$CURRENT_MONTH-$CURRENT_DATE}",
-      "> Attendees: ${3:attendees}",
+      "~~~panel type=info title=\"Meeting Details\"",
+      "Date: ${2:$CURRENT_YEAR-$CURRENT_MONTH-$CURRENT_DATE}",
+      "Attendees: ${3:attendees}",
+      "~~~",
       "",
       "## Agenda",
       "- ${4:Item 1}",
@@ -77,5 +88,14 @@
       "${9:next steps}"
     ],
     "description": "Insert meeting notes template with ADF elements"
+  },
+  "ADF Expand Section": {
+    "prefix": ["expand", "collapsible"],
+    "body": [
+      "~~~expand title=\"${1:Click to expand}\" expanded=${2:false}",
+      "$3",
+      "~~~"
+    ],
+    "description": "Insert ADF expandable/collapsible section"
   }
 }
