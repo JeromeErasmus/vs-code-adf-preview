@@ -13,36 +13,22 @@ The ADF Preview extension provides comprehensive support for Atlassian Document 
 ### 🎨 Enhanced Markdown Support
 
 #### ADF-Aware Syntax Highlighting
-Special highlighting for ADF elements:
+Special highlighting for ADF panel elements:
 
-**Primary ADF Panel Syntax** (recommended):
 - **Info Panels**: `~~~panel type=info` blocks - Blue highlighting
 - **Warning Panels**: `~~~panel type=warning` blocks - Yellow highlighting  
 - **Success Panels**: `~~~panel type=success` blocks - Green highlighting
 - **Note Panels**: `~~~panel type=note` blocks - Gray highlighting
 - **Error Panels**: `~~~panel type=error` blocks - Red highlighting
 
-**Markdown-Compatible Syntax** (fallback):
-- **Info Panels**: `> ℹ️ **Info:** content` - Blue highlighting
-- **Warning Panels**: `> ⚠️ **Warning:** content` - Yellow highlighting  
-- **Success Panels**: `> ✅ **Success:** content` - Green highlighting
-- **Note Panels**: `> 📝 **Note:** content` - Gray highlighting
-
 #### Smart Code Completion
-Intelligent autocomplete for ADF elements:
+Intelligent autocomplete for ADF panel elements:
 
-**Proper ADF Panel Blocks**:
 - Type `panel-info` → `~~~panel type=info title="${1:Title}"` block
 - Type `panel-warn` → `~~~panel type=warning title="${1:Title}"` block
 - Type `panel-success` → `~~~panel type=success title="${1:Title}"` block
 - Type `panel-note` → `~~~panel type=note title="${1:Title}"` block
 - Type `panel-error` → `~~~panel type=error title="${1:Title}"` block
-
-**Markdown-Compatible Panels** (legacy support):
-- Type `info` → `> ℹ️ **Info:** ${1:Information text}`
-- Type `warn` → `> ⚠️ **Warning:** ${1:Warning text}`
-- Type `success` → `> ✅ **Success:** ${1:Success text}`
-- Type `note` → `> 📝 **Note:** ${1:Note text}`
 
 ### 📋 Document Templates
 

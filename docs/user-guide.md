@@ -42,6 +42,8 @@ This guide provides practical instructions for using the ADF Preview extension's
 
 ## Writing ADF-Enhanced Markdown
 
+> 📖 **Complete ADF Markdown Reference**: For comprehensive documentation on all ADF markdown extensions and syntax, see the [Extended Markdown ADF Parser Package Documentation](https://www.npmjs.com/package/extended-markdown-adf-parser)
+
 ### Panel Syntax
 
 Create visually distinct information panels using proper ADF panel syntax:
@@ -73,17 +75,6 @@ This creates a red error panel with optional title
 ~~~panel type=info
 Panel content without title
 ~~~
-```
-
-**Markdown-compatible fallback** (for basic compatibility):
-```markdown
-> ℹ️ **Info:** This creates a blue information panel
-
-> ⚠️ **Warning:** This creates a yellow warning panel
-
-> ✅ **Success:** This creates a green success panel
-
-> 📝 **Note:** This creates a gray note panel
 ```
 
 ### Task Lists
@@ -125,7 +116,7 @@ function adfExample() {
 
 ### Panel Completions
 
-1. Start typing panel prefixes for proper ADF panels:
+1. Start typing panel prefixes for ADF panels:
    - `panel-info` → `~~~panel type=info` block
    - `panel-warn` → `~~~panel type=warning` block  
    - `panel-success` → `~~~panel type=success` block
@@ -135,12 +126,6 @@ function adfExample() {
 2. Press `Tab` to expand the snippet
 3. Fill in the placeholder content and optional title
 4. Close with `~~~`
-
-**Alternative completions** for Markdown-compatible panels:
-   - `info` → `> ℹ️ **Info:** ` snippet
-   - `warn` → `> ⚠️ **Warning:** ` snippet
-   - `success` → `> ✅ **Success:** ` snippet
-   - `note` → `> 📝 **Note:** ` snippet
 
 ### Template Completions
 
