@@ -44,8 +44,38 @@ This guide provides practical instructions for using the ADF Preview extension's
 
 ### Panel Syntax
 
-Create visually distinct information panels:
+Create visually distinct information panels using proper ADF panel syntax:
 
+```markdown
+~~~panel type=info title="Information"
+This creates a blue information panel with optional title
+~~~
+
+~~~panel type=warning title="Warning"
+This creates a yellow warning panel with optional title
+~~~
+
+~~~panel type=success title="Success"
+This creates a green success panel with optional title
+~~~
+
+~~~panel type=note title="Note"  
+This creates a gray note panel with optional title
+~~~
+
+~~~panel type=error title="Error"
+This creates a red error panel with optional title
+~~~
+```
+
+**Simplified syntax** (without title):
+```markdown
+~~~panel type=info
+Panel content without title
+~~~
+```
+
+**Markdown-compatible fallback** (for basic compatibility):
 ```markdown
 > ℹ️ **Info:** This creates a blue information panel
 
@@ -95,14 +125,22 @@ function adfExample() {
 
 ### Panel Completions
 
-1. Start typing panel prefixes:
-   - `info` → Info panel snippet
-   - `warn` → Warning panel snippet
-   - `success` → Success panel snippet
-   - `note` → Note panel snippet
+1. Start typing panel prefixes for proper ADF panels:
+   - `panel-info` → `~~~panel type=info` block
+   - `panel-warn` → `~~~panel type=warning` block  
+   - `panel-success` → `~~~panel type=success` block
+   - `panel-note` → `~~~panel type=note` block
+   - `panel-error` → `~~~panel type=error` block
 
 2. Press `Tab` to expand the snippet
-3. Fill in the placeholder content
+3. Fill in the placeholder content and optional title
+4. Close with `~~~`
+
+**Alternative completions** for Markdown-compatible panels:
+   - `info` → `> ℹ️ **Info:** ` snippet
+   - `warn` → `> ⚠️ **Warning:** ` snippet
+   - `success` → `> ✅ **Success:** ` snippet
+   - `note` → `> 📝 **Note:** ` snippet
 
 ### Template Completions
 

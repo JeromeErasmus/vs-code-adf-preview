@@ -13,7 +13,16 @@ The ADF Preview extension provides comprehensive support for Atlassian Document 
 ### 🎨 Enhanced Markdown Support
 
 #### ADF-Aware Syntax Highlighting
-Special highlighting for ADF elements in Markdown:
+Special highlighting for ADF elements:
+
+**Primary ADF Panel Syntax** (recommended):
+- **Info Panels**: `~~~panel type=info` blocks - Blue highlighting
+- **Warning Panels**: `~~~panel type=warning` blocks - Yellow highlighting  
+- **Success Panels**: `~~~panel type=success` blocks - Green highlighting
+- **Note Panels**: `~~~panel type=note` blocks - Gray highlighting
+- **Error Panels**: `~~~panel type=error` blocks - Red highlighting
+
+**Markdown-Compatible Syntax** (fallback):
 - **Info Panels**: `> ℹ️ **Info:** content` - Blue highlighting
 - **Warning Panels**: `> ⚠️ **Warning:** content` - Yellow highlighting  
 - **Success Panels**: `> ✅ **Success:** content` - Green highlighting
@@ -21,6 +30,15 @@ Special highlighting for ADF elements in Markdown:
 
 #### Smart Code Completion
 Intelligent autocomplete for ADF elements:
+
+**Proper ADF Panel Blocks**:
+- Type `panel-info` → `~~~panel type=info title="${1:Title}"` block
+- Type `panel-warn` → `~~~panel type=warning title="${1:Title}"` block
+- Type `panel-success` → `~~~panel type=success title="${1:Title}"` block
+- Type `panel-note` → `~~~panel type=note title="${1:Title}"` block
+- Type `panel-error` → `~~~panel type=error title="${1:Title}"` block
+
+**Markdown-Compatible Panels** (legacy support):
 - Type `info` → `> ℹ️ **Info:** ${1:Information text}`
 - Type `warn` → `> ⚠️ **Warning:** ${1:Warning text}`
 - Type `success` → `> ✅ **Success:** ${1:Success text}`
@@ -34,9 +52,10 @@ Pre-built templates for common document types:
 ```markdown
 # Meeting Notes
 
-> ℹ️ **Info:** 
-> Date: {{DATE}}
-> Attendees: {{ATTENDEES}}
+~~~panel type=info title="Meeting Details"
+**Date:** {{DATE}}
+**Attendees:** {{ATTENDEES}}
+~~~
 
 ## Agenda
 - Item 1
@@ -51,7 +70,9 @@ Pre-built templates for common document types:
 ```markdown
 # {{PROJECT_NAME}} Requirements
 
-> 📝 **Note:** This document outlines the requirements for {{PROJECT_NAME}}
+~~~panel type=note title="Document Overview"
+This document outlines the requirements for {{PROJECT_NAME}}
+~~~
 
 ## Overview
 
@@ -64,7 +85,9 @@ Pre-built templates for common document types:
 ```markdown
 # {{PROJECT_NAME}} Technical Specification
 
-> ⚠️ **Warning:** This document contains technical implementation details
+~~~panel type=warning title="Technical Details"
+This document contains technical implementation details
+~~~
 
 ## Architecture Overview
 
@@ -77,7 +100,9 @@ Pre-built templates for common document types:
 ```markdown
 # Status Report - {{DATE}}
 
-> ℹ️ **Info:** Project status as of {{DATE}}
+~~~panel type=info title="Report Summary"
+Project status as of {{DATE}}
+~~~
 
 ## Progress Summary
 
