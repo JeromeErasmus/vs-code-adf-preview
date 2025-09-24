@@ -46,7 +46,7 @@
             "priority": "option"
           }
         ],
-        "priority": "default"
+        "priority": "option"
       }
     ],
     "commands": [

@@ -40,10 +40,19 @@ After installation, verify the extension is working:
    ```markdown
    # Test Document
    
-   > ℹ️ **Info:** This is an ADF info panel
+   ~~~panel type=info title="Welcome"
+   This is an ADF info panel for testing the extension
+   ~~~
    
+   ## Task List
    - [ ] Task item
    - [x] Completed task
+   
+   ## Table Example
+   | Feature | Status |
+   |---------|--------|
+   | Panels  | ✅ Working |
+   | Tables  | ✅ Working |
    ```
 3. Right-click → "Open Preview" or use Command Palette → "ADF: Open Preview"
 4. You should see the rendered preview in a new tab

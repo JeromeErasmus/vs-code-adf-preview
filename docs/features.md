@@ -36,73 +36,116 @@ Pre-built templates for common document types:
 
 #### Meeting Notes Template
 ```markdown
-# Meeting Notes
+# {{MEETING_TITLE}}
 
-~~~panel type=info title="Meeting Details"
-**Date:** {{DATE}}
-**Attendees:** {{ATTENDEES}}
-~~~
+> ℹ️ **Info:** 
+> Date: {{DATE}}
+> Attendees: {{ATTENDEES}}
 
 ## Agenda
 - Item 1
 - Item 2
 
+## Discussion
+
 ## Action Items
 - [ ] Action 1
 - [ ] Action 2
+
+## Next Steps
 ```
 
 #### Requirements Document Template
 ```markdown
 # {{PROJECT_NAME}} Requirements
 
-~~~panel type=note title="Document Overview"
-This document outlines the requirements for {{PROJECT_NAME}}
-~~~
+> 📝 **Note:** This document outlines the requirements for {{PROJECT_NAME}} v{{VERSION}}
 
 ## Overview
 
 ## Functional Requirements
 
+### Core Features
+- [ ] Feature 1
+- [ ] Feature 2
+
 ## Non-Functional Requirements
+
+### Performance
+- Response time: < 200ms
+- Throughput: 1000 requests/second
+
+### Security
+- Authentication required
+- Data encryption at rest
+
+## Success Criteria
+
+> ✅ **Success:** All requirements must be met before release
 ```
 
 #### Technical Specification Template
 ```markdown
-# {{PROJECT_NAME}} Technical Specification
+# {{FEATURE_NAME}} - Technical Specification
 
-~~~panel type=warning title="Technical Details"
-This document contains technical implementation details
-~~~
+## Overview
 
-## Architecture Overview
+## Architecture
 
-## API Specifications
+### Components
 
-## Implementation Notes
+### Data Flow
+
+## Implementation Details
+
+### API Endpoints
+
+### Database Schema
+
+## Testing Strategy
+
+> ⚠️ **Warning:** All tests must pass before deployment
+
+## Deployment Plan
+
+## Rollback Strategy
 ```
 
 #### Status Report Template
 ```markdown
-# Status Report - {{DATE}}
+# {{TEAM_NAME}} Status Report
 
-~~~panel type=info title="Report Summary"
-Project status as of {{DATE}}
-~~~
+> 📝 **Note:** Status report for {{REPORT_PERIOD}}
 
-## Progress Summary
+## Accomplishments
 
-## Completed Items
-- [x] Item 1
-- [x] Item 2
+### Completed Tasks
+- [ ] Task 1
+- [ ] Task 2
 
-## In Progress
-- [ ] Item 3
-- [ ] Item 4
+## Current Progress
 
-## Blockers
-- [ ] Issue 1
-- [ ] Issue 2
+### In Progress
+- Work item 1 (50% complete)
+- Work item 2 (75% complete)
+
+## Upcoming Work
+
+### Next Sprint
+- [ ] Planned task 1
+- [ ] Planned task 2
+
+## Issues & Blockers
+
+> ⚠️ **Warning:** No critical blockers at this time
+
+## Metrics
+
+| Metric | Value |
+|--------|--------|
+| Sprint Velocity | 32 points |
+| Bug Count | 3 |
+| Test Coverage | 85% |
 ```
 
 ### 🔧 Developer Tools

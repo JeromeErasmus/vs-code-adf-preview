@@ -29,7 +29,7 @@ export function activate(context: vscode.ExtensionContext) {
   const completionProviderRegistration = vscode.languages.registerCompletionItemProvider(
     { language: 'markdown' },
     markdownCompletionProvider,
-    '>', '-', '*', '+'
+    '>', '-', '*', '+', 't' // Added 't' for template trigger
   );
   
   const hoverProviderRegistration = vscode.languages.registerHoverProvider(
@@ -139,6 +139,52 @@ export function activate(context: vscode.ExtensionContext) {
     }
   });
 
+  const insertTemplateCommand = vscode.commands.registerCommand('adf.insertTemplate', async (templateId: string) => {
+    const activeEditor = vscode.window.activeTextEditor;
+    if (!activeEditor) {
+      vscode.window.showErrorMessage('No active editor found');
+      return;
+    }
+
+    try {
+      // Process template
+      const content = await templateManager.createFromTemplate(templateId);
+      if (!content) {
+        return; // User cancelled during variable input
+      }
+
+      // Insert template at current cursor position
+      const position = activeEditor.selection.active;
+      const edit = new vscode.WorkspaceEdit();
+      
+      // If we're replacing "template" text, find and replace it
+      const document = activeEditor.document;
+      const line = document.lineAt(position.line);
+      const templateMatch = line.text.match(/template$/i);
+      
+      if (templateMatch) {
+        // Replace the "template" text
+        const range = new vscode.Range(
+          position.line,
+          line.text.length - templateMatch[0].length,
+          position.line,
+          line.text.length
+        );
+        edit.replace(document.uri, range, content);
+      } else {
+        // Insert at current position
+        edit.insert(document.uri, position, content);
+      }
+      
+      await vscode.workspace.applyEdit(edit);
+      
+      const template = templateManager.getTemplateById(templateId);
+      vscode.window.showInformationMessage(`Inserted ${template?.name || 'template'}`);
+    } catch (error) {
+      vscode.window.showErrorMessage(`Failed to insert template: ${error}`);
+    }
+  });
+
   const createMarkdownFromTemplateCommand = vscode.commands.registerCommand('adf.createMarkdownFromTemplate', async () => {
     try {
       const templates = templateManager.getTemplates();
@@ -233,6 +279,7 @@ export function activate(context: vscode.ExtensionContext) {
     hoverProviderRegistration,
     openPreviewCommand,
     validateDocumentCommand,
+    insertTemplateCommand,
     createMarkdownFromTemplateCommand,
     exportAsHTMLCommand,
     exportAsMarkdownCommand,

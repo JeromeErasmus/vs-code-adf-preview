@@ -101,29 +101,149 @@ Create quoted content with proper attribution and nested quote support. Blockquo
 
 ## Using Code Completion
 
-### Panel Completions
+### Enabling Snippet Support
 
-1. Start typing panel prefixes for ADF panels:
-   - `panel-info` → `~~~panel type=info` block
-   - `panel-warn` → `~~~panel type=warning` block  
-   - `panel-success` → `~~~panel type=success` block
-   - `panel-note` → `~~~panel type=note` block
-   - `panel-error` → `~~~panel type=error` block
+If snippets are not working in your markdown files, you may need to configure VS Code settings. Create or update your workspace `.vscode/settings.json` file:
 
-2. Press `Tab` to expand the snippet
-3. Fill in the placeholder content and optional title
-4. Close with `~~~`
+```json
+{
+  "editor.quickSuggestions": {
+    "other": true,
+    "comments": false,
+    "strings": true
+  },
+  "editor.suggestOnTriggerCharacters": true,
+  "editor.wordBasedSuggestions": "off",
+  "editor.snippetSuggestions": "top",
+  "editor.suggest.showSnippets": true,
+  "[markdown]": {
+    "editor.quickSuggestions": {
+      "other": true,
+      "comments": false,
+      "strings": true
+    },
+    "editor.snippetSuggestions": "top",
+    "editor.suggest.showSnippets": true,
+    "editor.tabCompletion": "on",
+    "editor.wordBasedSuggestions": "off"
+  }
+}
+```
 
-### Template Completions
+After adding these settings, restart VS Code or reload the window (`Ctrl+Shift+P` → "Developer: Reload Window").
 
-1. Type `template` in an empty file
-2. Select from available templates:
-   - Meeting Notes
-   - Requirements Document
-   - Technical Specification  
-   - Status Report
+### Available Snippets
 
-3. Fill in the template variables when prompted
+The extension provides two types of code completion: **Static Snippets** and **Dynamic Completions**.
+
+#### Static Snippets (from snippets file)
+
+These snippets are triggered by typing their prefix and pressing `Tab` or `Ctrl+Space`:
+
+**Panel Snippets:**
+- `info` or `panel-info` → ADF Info Panel with custom title
+  ```markdown
+  ~~~panel type=info title="Information Panel"
+  Your content here
+  ~~~
+  ```
+
+- `warn`, `panel-warn`, or `panel-warning` → ADF Warning Panel
+  ```markdown
+  ~~~panel type=warning title="Warning Panel"
+  Your content here
+  ~~~
+  ```
+
+- `success` or `panel-success` → ADF Success Panel
+  ```markdown
+  ~~~panel type=success title="Success Panel"
+  Your content here
+  ~~~
+  ```
+
+- `note` or `panel-note` → ADF Note Panel
+  ```markdown
+  ~~~panel type=note title="Note Panel"
+  Your content here
+  ~~~
+  ```
+
+- `error` or `panel-error` → ADF Error Panel
+  ```markdown
+  ~~~panel type=error title="Error Panel"
+  Your content here
+  ~~~
+  ```
+
+**Content Snippets:**
+- `tasks` → Task List with checkboxes
+  ```markdown
+  - [ ] Task 1
+  - [ ] Task 2
+  - [ ] Task 3
+  ```
+
+- `table` → ADF Compatible Table
+  ```markdown
+  | Header 1 | Header 2 | Header 3 |
+  |----------|----------|----------|
+  | Cell 1   | Cell 2   | Cell 3   |
+  | Cell 4   | Cell 5   | Cell 6   |
+  ```
+
+- `meeting` → Meeting Notes Template (see Template section below)
+
+- `expand` or `collapsible` → Expandable Section
+  ```markdown
+  ~~~expand title="Click to expand"
+  Hidden content goes here
+  ~~~
+  ```
+
+#### Dynamic Completions (context-aware)
+
+These appear automatically based on what you're typing:
+
+
+**General Completions (triggered in empty lines)**:
+- **ADF Table** → Multi-line table with headers and sample data
+- **ADF Code Block** → Fenced code block with language placeholder
+- **ADF Link** → Markdown hyperlink format
+
+**Task Item Completion (triggered after `-`, `*`, or `+`)**:
+- **Task Item** → `[ ] Task description` (creates checkbox)
+
+#### Template Completions
+
+Full document templates available via Command Palette or `template` snippet:
+
+1. **Meeting Notes Template** (`meeting-notes`)
+   - Variables: Meeting Title, Date, Attendees
+   - Includes info panel, agenda, discussion, action items, next steps
+
+2. **Requirements Document Template** (`requirements-doc`)  
+   - Variables: Project Name, Version
+   - Includes overview, functional requirements, non-functional requirements, success criteria
+
+3. **Technical Specification Template** (`technical-spec`)
+   - Variables: Feature Name
+   - Includes overview, architecture, implementation details, testing strategy
+
+4. **Status Report Template** (`status-report`)
+   - Variables: Report Period, Team Name
+   - Includes accomplishments, progress, upcoming work, issues, metrics
+
+**To use templates:**
+- **Method 1:** Command Palette → "ADF: Create from Template" → Select template → Fill variables
+- **Method 2:** Type `template` → Select from list → Fill variables  
+- **Method 3:** Type specific template prefix (e.g., `meeting`) → Press Tab
+
+**Troubleshooting Snippets:**
+- Ensure the ADF Preview extension is installed and active
+- Check that your file has a `.md` extension
+- Try typing the snippet prefix and pressing `Ctrl+Space` to trigger suggestions
+- Verify the workspace settings above are applied correctly
 
 ## Working with Document Templates
 

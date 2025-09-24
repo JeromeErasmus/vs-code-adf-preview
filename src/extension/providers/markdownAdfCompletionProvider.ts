@@ -1,6 +1,13 @@
 import * as vscode from 'vscode';
+import { MarkdownTemplateManager } from '../templates/markdownTemplateManager';
 
 export class MarkdownADFCompletionProvider implements vscode.CompletionItemProvider {
+  private templateManager: MarkdownTemplateManager;
+
+  constructor() {
+    this.templateManager = new MarkdownTemplateManager();
+  }
+
   async provideCompletionItems(
     document: vscode.TextDocument,
     position: vscode.Position,
@@ -23,6 +30,11 @@ export class MarkdownADFCompletionProvider implements vscode.CompletionItemProvi
     // Check for task list items
     if (linePrefix.match(/^\s*[-*+]\s*$/)) {
       completions.push(this.getTaskItemCompletion());
+    }
+
+    // Template completions - trigger when typing "template" or at the beginning of empty document
+    if (linePrefix.match(/^template$/i) || (document.getText().trim().length === 0 && linePrefix.match(/^\s*$/))) {
+      completions.push(...await this.getTemplateCompletions());
     }
 
     // General ADF completions
@@ -119,6 +131,27 @@ export class MarkdownADFCompletionProvider implements vscode.CompletionItemProvi
       item.detail = completion.detail;
       item.documentation = new vscode.MarkdownString(completion.documentation);
       item.sortText = 'adf-' + completion.label;
+      return item;
+    });
+  }
+
+  private async getTemplateCompletions(): Promise<vscode.CompletionItem[]> {
+    const templates = this.templateManager.getTemplates();
+    
+    return templates.map(template => {
+      const item = new vscode.CompletionItem(template.name, vscode.CompletionItemKind.Snippet);
+      item.detail = `Template: ${template.description}`;
+      item.documentation = new vscode.MarkdownString(`**${template.name}**\n\n${template.description}\n\n*Category: ${template.category}*`);
+      item.insertText = ''; // Will be handled by command
+      item.sortText = 'template-' + template.name;
+      
+      // Add command to create template
+      item.command = {
+        command: 'adf.insertTemplate',
+        title: 'Insert Template',
+        arguments: [template.id]
+      };
+      
       return item;
     });
   }
