@@ -217,12 +217,6 @@ This guide helps resolve common issues with the ADF Preview extension.
    - Check [Features Overview](features.md) for supported ADF elements
    - Some elements may render as placeholders
 
-3. **Theme Issues**:
-   ```json
-   {
-     "adf.preview.theme": "light"  // Try explicit theme
-   }
-   ```
 
 4. **Font and Styling**:
    ```json
@@ -445,9 +439,9 @@ This guide helps resolve common issues with the ADF Preview extension.
    - Ensure file is recognized as Markdown
    - May need to set language mode manually
 
-3. **Theme Compatibility**:
-   - Some themes may not support custom grammar scopes
-   - Try different themes to verify highlighting works
+3. **Editor Theme Compatibility**:
+   - Some VS Code themes may not support custom grammar scopes
+   - Try different VS Code themes to verify syntax highlighting works
 
 ## Development/Debug Issues
 

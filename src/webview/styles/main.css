@@ -12,18 +12,6 @@
   --adf-warning-border: #ffab00;
 }
 
-body.theme-dark {
-  --adf-bg-color: #1e1e1e;
-  --adf-text-color: #e6e6e6;
-  --adf-border-color: #414141;
-  --adf-toolbar-bg: #2d2d2d;
-  --adf-button-bg: #0065ff;
-  --adf-button-hover: #4c9aff;
-  --adf-error-bg: #3d1f1f;
-  --adf-error-border: #ff5630;
-  --adf-warning-bg: #3d3318;
-  --adf-warning-border: #ffab00;
-}
 
 * {
   box-sizing: border-box;
@@ -332,21 +320,54 @@ blockquote p {
   color: #1976d2;
 }
 
-.file-type-badge.adf {
-  background-color: #f3e5f5;
-  border-color: #9c27b0;
-  color: #7b1fa2;
+/* Additional Bootstrap utility classes for better webview integration */
+.bg-vscode {
+  background-color: var(--vscode-editor-background) !important;
+  color: var(--vscode-editor-foreground) !important;
 }
 
-body.theme-dark .file-type-badge.md {
-  background-color: #1e3a5f;
-  border-color: #2196f3;
-  color: #64b5f6;
+/* Ensure proper scrolling in webview */
+html, body {
+  overflow-x: hidden;
 }
 
-body.theme-dark .file-type-badge.adf {
-  background-color: #4a148c;
-  border-color: #9c27b0;
-  color: #ba68c8;
+/* Custom spacing for ADF content */
+.adf-content {
+  line-height: 1.6;
+}
+
+/* Enhance code blocks within ADF content */
+code {
+  background-color: #f8f9fa;
+  padding: 0.2em 0.4em;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+}
+
+pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+/* Custom navbar styling for dark theme */
+.navbar-dark .navbar-brand .badge {
+  font-size: 0.75em;
+}
+
+/* Small grey badge */
+.badge-small {
+  font-size: 0.6em;
+  font-weight: normal;
+  padding: 2px 6px;
+}
+
+.badge-grey {
+  background-color: #6c757d;
+  color: #ffffff;
+}
+
+/* Ensure dropdown works in webview context */
+.dropdown-menu {
+  z-index: 1050;
 }
 

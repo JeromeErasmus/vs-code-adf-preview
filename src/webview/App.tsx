@@ -8,7 +8,6 @@ import { ADFDocument, WebviewMessage, UpdateMessage, ErrorMessage, ValidationErr
 const App: React.FC = () => {
   const [adfDocument, setAdfDocument] = useState<ADFDocument | null>(null);
   const [errors, setErrors] = useState<ValidationError[]>([]);
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [fontSize, setFontSize] = useState<number>(14);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [fileType, setFileType] = useState<'adf' | 'md'>('adf');
@@ -23,10 +22,6 @@ const App: React.FC = () => {
           const updateMsg = message as UpdateMessage;
           setAdfDocument(updateMsg.payload.document);
           setErrors([]);
-          if (updateMsg.payload.theme) {
-            // Always default to light mode, even for 'auto'
-            setTheme(updateMsg.payload.theme === 'auto' ? 'light' : updateMsg.payload.theme);
-          }
           if (updateMsg.payload.fontSize) {
             setFontSize(updateMsg.payload.fontSize);
           }
@@ -44,12 +39,6 @@ const App: React.FC = () => {
           break;
         }
         
-        case 'theme': {
-          const newTheme = message.payload.theme;
-          // Always default to light mode, even for 'auto'
-          setTheme(newTheme === 'auto' ? 'light' : newTheme);
-          break;
-        }
         
         default:
           console.log('Unknown message type:', message.type);
@@ -63,14 +52,12 @@ const App: React.FC = () => {
     };
   }, []);
 
-  // Note: detectTheme function removed - now always default to light mode
-
-  // Apply theme to body
+  // Apply light theme to body
   useEffect(() => {
     if (typeof document !== 'undefined') {
-      document.body.className = `theme-${theme}`;
+      document.body.className = 'theme-light';
     }
-  }, [theme]);
+  }, []);
 
   // Apply font size
   useEffect(() => {
@@ -101,9 +88,11 @@ const App: React.FC = () => {
   // Render loading state
   if (isLoading) {
     return (
-      <div className="adf-preview-container loading">
-        <LoadingSpinner />
-        <p>Loading ADF document...</p>
+      <div className="d-flex flex-column justify-content-center align-items-center" style={{ height: '100vh' }}>
+        <div className="spinner-border text-primary mb-3" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+        <p className="text-muted">Loading ADF document...</p>
       </div>
     );
   }
@@ -111,7 +100,7 @@ const App: React.FC = () => {
   // Render error state
   if (errors.length > 0) {
     return (
-      <div className="adf-preview-container error">
+      <div className="container-fluid p-3">
         <ErrorDisplay errors={errors} />
       </div>
     );
@@ -120,16 +109,24 @@ const App: React.FC = () => {
   // Render empty state
   if (!adfDocument) {
     return (
-      <div className="adf-preview-container empty">
-        <div className="empty-state">
-          <h2>No ADF Document</h2>
-          <p>Open a valid ADF file to see the preview.</p>
-          <p className="hint">ADF documents must have:</p>
-          <ul className="hint-list">
-            <li>type: "doc"</li>
-            <li>version: 1</li>
-            <li>content: [...]</li>
-          </ul>
+      <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
+        <div className="text-center">
+          <div className="alert alert-info" role="alert">
+            <h4 className="alert-heading">
+              <i className="bi bi-info-circle me-2"></i>
+              No ADF Document
+            </h4>
+            <p>Open a valid ADF file to see the preview.</p>
+            <hr />
+            <p className="mb-0 small">
+              <strong>ADF documents must have:</strong>
+            </p>
+            <ul className="list-unstyled small mt-2">
+              <li><code>type: "doc"</code></li>
+              <li><code>version: 1</code></li>
+              <li><code>content: [...]</code></li>
+            </ul>
+          </div>
         </div>
       </div>
     );
@@ -138,59 +135,78 @@ const App: React.FC = () => {
   // Render document
   return (
     <ErrorBoundary>
-      <div className="adf-preview-container">
-        <div className="adf-preview-toolbar">
-          <div className="toolbar-group">
-            <span className="toolbar-label">Source:</span>
-            <span className={`file-type-badge ${fileType}`}>
-              {fileType === 'md' ? '📝 Markdown' : '📄 ADF'}
-            </span>
+      <div className="d-flex flex-column" style={{ height: '100vh' }}>
+        {/* Bootstrap Dark Navbar */}
+        <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+          <div className="container-fluid">
+            {/* Source Badge */}
+            <div className="navbar-brand mb-0 h1">
+              <span className="badge badge-small badge-grey me-2">
+                <i className={`bi ${fileType === 'md' ? 'bi-markdown' : 'bi-file-text'} me-1`}></i>
+                {fileType === 'md' ? 'Markdown' : 'ADF'}
+              </span>
+            </div>
+            
+            {/* Navigation Links/Buttons */}
+            <div className="navbar-nav ms-auto">
+              <div className="nav-item dropdown me-2">
+                <button 
+                  className="btn btn-outline-light btn-sm dropdown-toggle" 
+                  type="button" 
+                  data-bs-toggle="dropdown" 
+                  aria-expanded="false"
+                >
+                  <i className="bi bi-download me-1"></i>
+                  Export
+                </button>
+                <ul className="dropdown-menu dropdown-menu-dark">
+                  <li>
+                    <button 
+                      className="dropdown-item"
+                      onClick={() => handleExport('html')}
+                      title="Export as HTML"
+                    >
+                      <i className="bi bi-filetype-html me-2"></i>
+                      HTML
+                    </button>
+                  </li>
+                  <li>
+                    <button 
+                      className="dropdown-item"
+                      onClick={() => handleExport('markdown')}
+                      title="Export as Markdown"
+                    >
+                      <i className="bi bi-markdown me-2"></i>
+                      Markdown
+                    </button>
+                  </li>
+                  <li>
+                    <button 
+                      className="dropdown-item"
+                      onClick={() => handleExport('json')}
+                      title="Export as formatted JSON"
+                    >
+                      <i className="bi bi-filetype-json me-2"></i>
+                      JSON
+                    </button>
+                  </li>
+                </ul>
+              </div>
+              
+              <button 
+                className="btn btn-outline-danger btn-sm"
+                onClick={handleClosePreview}
+                title="Close Preview and View Source"
+              >
+                <i className="bi bi-x-circle me-1"></i>
+                View Source
+              </button>
+            </div>
           </div>
-          <div className="toolbar-group">
-            <button 
-              className="toolbar-button close-button"
-              onClick={handleClosePreview}
-              title="Close Preview and View Source"
-            >
-              ✕ View Source
-            </button>
-          </div>
-          <div className="toolbar-group">
-            <button 
-              className="toolbar-button"
-              onClick={() => handleExport('html')}
-              title="Export as HTML"
-            >
-              📄 HTML
-            </button>
-            <button 
-              className="toolbar-button"
-              onClick={() => handleExport('markdown')}
-              title="Export as Markdown"
-            >
-              📝 Markdown
-            </button>
-            <button 
-              className="toolbar-button"
-              onClick={() => handleExport('json')}
-              title="Export as formatted JSON"
-            >
-              🔧 JSON
-            </button>
-          </div>
-          <div className="toolbar-group">
-            <span className="toolbar-label">Theme:</span>
-            <select 
-              className="toolbar-select"
-              value={theme}
-              onChange={(e) => setTheme(e.target.value as 'light' | 'dark')}
-            >
-              <option value="light">Light</option>
-              <option value="dark">Dark</option>
-            </select>
-          </div>
-        </div>
-        <div className="adf-preview-content">
+        </nav>
+        
+        {/* Main Content Area */}
+        <div className="flex-grow-1 overflow-auto p-3">
           <ADFRenderer document={adfDocument} />
         </div>
       </div>

@@ -83,7 +83,6 @@ src/
 #### Webview (Browser/React)
 - **App.tsx**: Main React application
 - **ADFRenderer**: Atlaskit renderer integration
-- **Theme handling**: Light/dark mode support
 
 ### Data Flow
 
@@ -612,7 +611,7 @@ Message passing interface:
 ```typescript
 // Messages from extension to webview
 interface ToWebviewMessage {
-  type: 'updateContent' | 'changeTheme' | 'export';
+  type: 'updateContent' | 'export';
   data: any;
 }
 

@@ -2,7 +2,7 @@
   "name": "adf-preview",
   "displayName": "ADF Preview for Confluence",
   "description": "Preview and edit Atlassian Document Format (ADF) files with live Confluence-style rendering",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "publisher": "jerome-erasmus",
   "repository": {
     "type": "git",
@@ -52,43 +52,43 @@
     "commands": [
       {
         "command": "adf.openPreview",
-        "title": "ADF: Open Preview",
+        "title": "Open Preview",
         "category": "ADF",
-        "icon": "$(open-preview)"
+        "icon": "$(preview)"
       },
       {
         "command": "adf.closePreview",
-        "title": "ADF: Close Preview",
+        "title": "Close Preview",
         "category": "ADF"
       },
       {
         "command": "adf.exportAsHTML",
-        "title": "ADF: Export as HTML",
+        "title": "Export as HTML",
         "category": "ADF"
       },
       {
         "command": "adf.exportAsMarkdown",
-        "title": "ADF: Export as Markdown",
+        "title": "Export as Markdown",
         "category": "ADF"
       },
       {
         "command": "adf.validateDocument",
-        "title": "ADF: Validate Document",
+        "title": "Validate Document",
         "category": "ADF"
       },
       {
         "command": "adf.test",
-        "title": "ADF: Test Extension",
+        "title": "Test Extension",
         "category": "ADF"
       },
       {
         "command": "adf.debugLog",
-        "title": "ADF: Write Debug Log",
+        "title": "Write Debug Log",
         "category": "ADF"
       },
       {
         "command": "adf.createMarkdownFromTemplate",
-        "title": "ADF: Create from Template",
+        "title": "Create from Template",
         "category": "ADF",
         "icon": "$(file-add)"
       }
@@ -137,16 +137,6 @@
     "configuration": {
       "title": "ADF Preview",
       "properties": {
-        "adf.preview.theme": {
-          "type": "string",
-          "default": "light",
-          "enum": [
-            "auto",
-            "light",
-            "dark"
-          ],
-          "description": "Theme for ADF preview"
-        },
         "adf.preview.fontSize": {
           "type": "number",
           "default": 14,

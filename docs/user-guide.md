@@ -37,7 +37,6 @@ This guide provides practical instructions for using the ADF Preview extension's
 ### Preview Tab Behavior
 
 - **Live Updates**: Preview updates automatically as you edit
-- **Theme Sync**: Preview matches your editor theme
 - **Independent Tabs**: Source and preview can be viewed side-by-side
 
 ## Writing ADF-Enhanced Markdown
@@ -349,12 +348,6 @@ Run comprehensive validation:
 
 ### Preview Settings
 
-**Theme Selection**:
-```json
-{
-  "adf.preview.theme": "auto"  // Matches editor theme
-}
-```
 
 **Update Behavior**:
 ```json

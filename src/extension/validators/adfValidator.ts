@@ -1,8 +1,15 @@
 import { ADFDocument, ADFEntity, ValidationResult, ValidationError, ValidationWarning } from '../../shared/types';
+import { Parser } from 'extended-markdown-adf-parser';
 
 export class ADFValidator {
   private errors: ValidationError[] = [];
   private warnings: ValidationWarning[] = [];
+  private parser: any;
+
+  constructor() {
+    // Initialize parser with ADF extensions enabled for validation
+    this.parser = new (Parser as any)({ enableAdfExtensions: true });
+  }
 
   public validateDocument(data: any): ValidationResult {
     this.errors = [];
@@ -27,10 +34,49 @@ export class ADFValidator {
     if (!Array.isArray(data.content)) {
       this.addError('content', 'Document must have a content array');
     } else {
-      // Validate each content node
+      // Use the extended-markdown-adf-parser to validate the document structure
+      try {
+        // First try to convert ADF to markdown and back to validate structure
+        const markdown = this.parser.adfToMarkdown(data);
+        const reconstructedAdf = this.parser.markdownToAdf(markdown);
+        
+        // If conversion succeeds without throwing, the document structure is valid
+        if (!reconstructedAdf || typeof reconstructedAdf !== 'object') {
+          this.addError('structure', 'Document structure is invalid - parser could not reconstruct ADF');
+        }
+      } catch (error) {
+        // Parser threw an error, document structure is invalid
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        this.addError('structure', `Document structure validation failed: ${errorMessage}`);
+      }
+
+      // Still run basic node validation for additional checks
       data.content.forEach((node: any, index: number) => {
         this.validateNode(node, `content[${index}]`);
       });
+    }
+
+    return this.getResult();
+  }
+
+  /**
+   * Validates markdown content by attempting to parse it with the extended-markdown-adf-parser
+   */
+  public validateMarkdown(markdown: string): ValidationResult {
+    this.errors = [];
+    this.warnings = [];
+
+    try {
+      const adfDocument = this.parser.markdownToAdf(markdown);
+      
+      if (!adfDocument || typeof adfDocument !== 'object') {
+        this.addError('', 'Markdown could not be converted to valid ADF document');
+      } else if (!adfDocument.content || !Array.isArray(adfDocument.content)) {
+        this.addError('content', 'Markdown conversion resulted in document without valid content');
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      this.addError('', `Markdown parsing failed: ${errorMessage}`);
     }
 
     return this.getResult();
@@ -47,53 +93,9 @@ export class ADFValidator {
       return;
     }
 
-    // Validate based on node type
-    switch (node.type) {
-      case 'paragraph':
-      case 'heading':
-      case 'bulletList':
-      case 'orderedList':
-      case 'blockquote':
-      case 'codeBlock':
-      case 'panel':
-      case 'rule':
-      case 'table':
-        this.validateBlockNode(node, path);
-        break;
-      
-      case 'text':
-        this.validateTextNode(node, path);
-        break;
-      
-      case 'emoji':
-      case 'mention':
-      case 'inlineCard':
-      case 'status':
-        this.validateInlineNode(node, path);
-        break;
-      
-      case 'listItem':
-      case 'tableRow':
-      case 'tableCell':
-      case 'tableHeader':
-        this.validateStructuralNode(node, path);
-        break;
-      
-      case 'media':
-      case 'mediaGroup':
-      case 'mediaSingle':
-        this.validateMediaNode(node, path);
-        break;
-      
-      default:
-        this.addWarning(`${path}.type`, `Unknown node type: ${node.type}`);
-    }
-
-    // Validate marks if present
-    if (node.marks && Array.isArray(node.marks)) {
-      node.marks.forEach((mark: any, index: number) => {
-        this.validateMark(mark, `${path}.marks[${index}]`);
-      });
+    // Basic validation for common issues that the parser might not catch
+    if (node.type === 'text' && typeof node.text !== 'string') {
+      this.addError(`${path}.text`, 'Text node must have a text property of type string');
     }
 
     // Validate nested content
@@ -101,139 +103,6 @@ export class ADFValidator {
       node.content.forEach((child: any, index: number) => {
         this.validateNode(child, `${path}.content[${index}]`);
       });
-    }
-  }
-
-  private validateBlockNode(node: ADFEntity, path: string): void {
-    // Block nodes can have content
-    if (node.content && !Array.isArray(node.content)) {
-      this.addError(`${path}.content`, 'Block node content must be an array');
-    }
-
-    // Validate specific block node attributes
-    switch (node.type) {
-      case 'heading':
-        if (!node.attrs || typeof node.attrs.level !== 'number') {
-          this.addError(`${path}.attrs.level`, 'Heading must have a numeric level attribute');
-        } else if (node.attrs.level < 1 || node.attrs.level > 6) {
-          this.addError(`${path}.attrs.level`, 'Heading level must be between 1 and 6');
-        }
-        break;
-      
-      case 'codeBlock':
-        if (node.attrs && node.attrs.language && typeof node.attrs.language !== 'string') {
-          this.addError(`${path}.attrs.language`, 'Code block language must be a string');
-        }
-        break;
-      
-      case 'panel':
-        if (!node.attrs || !node.attrs.panelType) {
-          this.addWarning(`${path}.attrs.panelType`, 'Panel should have a panelType attribute');
-        }
-        break;
-    }
-  }
-
-  private validateTextNode(node: ADFEntity, path: string): void {
-    if (typeof node.text !== 'string') {
-      this.addError(`${path}.text`, 'Text node must have a text property of type string');
-    }
-
-    // Text nodes should not have content
-    if (node.content) {
-      this.addError(`${path}.content`, 'Text nodes should not have content property');
-    }
-  }
-
-  private validateInlineNode(node: ADFEntity, path: string): void {
-    // Validate attrs based on node type
-    if (!node.attrs) {
-      this.addError(`${path}.attrs`, `${node.type} node must have attrs`);
-      return;
-    }
-
-    switch (node.type) {
-      case 'emoji':
-        if (!node.attrs.shortName || !node.attrs.id) {
-          this.addError(`${path}.attrs`, 'Emoji must have shortName and id attributes');
-        }
-        break;
-      
-      case 'mention':
-        if (!node.attrs.id) {
-          this.addError(`${path}.attrs.id`, 'Mention must have an id attribute');
-        }
-        break;
-      
-      case 'status':
-        if (!node.attrs.text || !node.attrs.color) {
-          this.addError(`${path}.attrs`, 'Status must have text and color attributes');
-        }
-        break;
-    }
-  }
-
-  private validateStructuralNode(node: ADFEntity, path: string): void {
-    // These nodes must have content
-    if (!node.content || !Array.isArray(node.content)) {
-      this.addError(`${path}.content`, `${node.type} must have content array`);
-    }
-
-    // Validate table structure
-    if (node.type === 'tableCell' || node.type === 'tableHeader') {
-      if (node.attrs && node.attrs.colspan && typeof node.attrs.colspan !== 'number') {
-        this.addError(`${path}.attrs.colspan`, 'Colspan must be a number');
-      }
-      if (node.attrs && node.attrs.rowspan && typeof node.attrs.rowspan !== 'number') {
-        this.addError(`${path}.attrs.rowspan`, 'Rowspan must be a number');
-      }
-    }
-  }
-
-  private validateMediaNode(node: ADFEntity, path: string): void {
-    if (!node.attrs) {
-      this.addError(`${path}.attrs`, 'Media node must have attrs');
-      return;
-    }
-
-    if (node.type === 'media') {
-      if (!node.attrs.id && !node.attrs.url) {
-        this.addError(`${path}.attrs`, 'Media must have either id or url attribute');
-      }
-      if (!node.attrs.type) {
-        this.addError(`${path}.attrs.type`, 'Media must have a type attribute');
-      }
-    }
-  }
-
-  private validateMark(mark: any, path: string): void {
-    if (!mark || typeof mark !== 'object') {
-      this.addError(path, 'Mark must be a valid object');
-      return;
-    }
-
-    if (!mark.type) {
-      this.addError(`${path}.type`, 'Mark must have a type property');
-      return;
-    }
-
-    // Validate known mark types
-    const validMarkTypes = [
-      'strong', 'em', 'underline', 'strike', 'code',
-      'link', 'textColor', 'backgroundColor', 'subsup'
-    ];
-
-    if (!validMarkTypes.includes(mark.type)) {
-      this.addWarning(`${path}.type`, `Unknown mark type: ${mark.type}`);
-    }
-
-    // Validate mark-specific attributes
-    if (mark.type === 'link' && (!mark.attrs || !mark.attrs.href)) {
-      this.addError(`${path}.attrs.href`, 'Link mark must have href attribute');
-    }
-
-    if (mark.type === 'textColor' && (!mark.attrs || !mark.attrs.color)) {
-      this.addError(`${path}.attrs.color`, 'TextColor mark must have color attribute');
     }
   }
 

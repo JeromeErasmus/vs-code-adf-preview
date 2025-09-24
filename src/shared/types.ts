@@ -44,7 +44,6 @@ export type MessageType =
   | 'error'
   | 'export'
   | 'scroll'
-  | 'theme'
   | 'validate'
   | 'ready'
   | 'closePreview';
@@ -58,7 +57,6 @@ export interface UpdateMessage extends WebviewMessage {
   type: 'update';
   payload: {
     document: ADFDocument;
-    theme?: 'light' | 'dark' | 'auto';
     fontSize?: number;
     fileType?: 'adf' | 'md';
     error?: string;
@@ -81,12 +79,6 @@ export interface ErrorMessage extends WebviewMessage {
   };
 }
 
-export interface ThemeMessage extends WebviewMessage {
-  type: 'theme';
-  payload: {
-    theme: 'light' | 'dark' | 'auto';
-  };
-}
 
 export interface ExportOptions {
   format: 'html' | 'markdown' | 'pdf' | 'json';
@@ -95,7 +87,6 @@ export interface ExportOptions {
 }
 
 export interface ADFPreviewConfig {
-  theme: 'auto' | 'light' | 'dark';
   fontSize: number;
   autoUpdate: boolean;
   updateDelay: number;

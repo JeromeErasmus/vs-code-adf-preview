@@ -184,7 +184,6 @@ Pre-built templates for common document types:
 #### Preview Settings
 ```json
 {
-  "adf.preview.theme": "auto",           // "auto" | "light" | "dark"
   "adf.preview.fontSize": 14,            // Font size in pixels
   "adf.preview.autoUpdate": true,        // Auto-update preview
   "adf.preview.updateDelay": 500,        // Update delay in milliseconds

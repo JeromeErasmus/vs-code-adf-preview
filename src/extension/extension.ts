@@ -5,7 +5,7 @@ import { MarkdownADFCompletionProvider } from './providers/markdownAdfCompletion
 import { MarkdownADFHoverProvider } from './providers/markdownAdfHoverProvider';
 import { MarkdownTemplateManager } from './templates/markdownTemplateManager';
 import { ADFValidator } from './validators/adfValidator';
-import { ADFDocument } from '../shared/types';
+import { ADFDocument, ValidationResult } from '../shared/types';
 import { processContent, detectFileType, FileType } from '../shared/converters/markdownConverter';
 
 let customEditorProvider: ADFCustomEditorProvider;
@@ -91,21 +91,22 @@ export function activate(context: vscode.ExtensionContext) {
       
       let adfDocument: ADFDocument;
       
+      const validator = new ADFValidator();
+      let validationResult: ValidationResult;
+      
       if (fileType === FileType.MARKDOWN) {
-        // Convert markdown to ADF first
-        const conversionResult = await processContent(content, filePath);
-        if (!conversionResult.success || !conversionResult.document) {
-          vscode.window.showErrorMessage(`Markdown conversion failed: ${conversionResult.error}`);
+        // Validate markdown directly using the parser
+        validationResult = validator.validateMarkdown(content);
+      } else {
+        // Parse ADF JSON directly and validate
+        try {
+          adfDocument = JSON.parse(content);
+          validationResult = validator.validateDocument(adfDocument);
+        } catch (error) {
+          vscode.window.showErrorMessage(`Invalid JSON: ${error instanceof Error ? error.message : String(error)}`);
           return;
         }
-        adfDocument = conversionResult.document;
-      } else {
-        // Parse ADF JSON directly
-        adfDocument = JSON.parse(content);
       }
-      
-      const validator = new ADFValidator();
-      const validationResult = validator.validateDocument(adfDocument);
       
       if (validationResult.isValid) {
         const fileTypeLabel = fileType === FileType.MARKDOWN ? 'Markdown' : 'ADF';

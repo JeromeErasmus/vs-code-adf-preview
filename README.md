@@ -117,7 +117,6 @@ Add to your VS Code `settings.json` (File → Preferences → Settings → Open 
   // Other VS Code settings...
   
   // ADF Preview Extension Settings
-  "adf.preview.theme": "auto",
   "adf.preview.autoUpdate": true,
   "adf.preview.updateDelay": 500,
   "adf.completion.enabled": true,

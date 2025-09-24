@@ -164,7 +164,6 @@ export class ADFCustomEditorProvider implements vscode.CustomTextEditorProvider 
             type: 'update',
             payload: {
               document: result.document,
-              theme: config.get<'light' | 'dark' | 'auto'>('theme', 'light'),
               fontSize: config.get<number>('fontSize', 14),
               fileType: result.fileType
             }
@@ -177,7 +176,6 @@ export class ADFCustomEditorProvider implements vscode.CustomTextEditorProvider 
             type: 'update',
             payload: {
               document: fallbackDoc,
-              theme: config.get<'light' | 'dark' | 'auto'>('theme', 'light'),
               fontSize: config.get<number>('fontSize', 14),
               fileType: result.fileType,
               error: result.error
@@ -355,15 +353,19 @@ export class ADFCustomEditorProvider implements vscode.CustomTextEditorProvider 
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta http-equiv="Content-Security-Policy" content="default-src 'none'; 
-        style-src ${webview.cspSource} 'unsafe-inline'; 
-        script-src 'nonce-${nonce}';
-        font-src ${webview.cspSource};
+        style-src ${webview.cspSource} 'unsafe-inline' https://cdn.jsdelivr.net; 
+        script-src 'nonce-${nonce}' https://cdn.jsdelivr.net;
+        font-src ${webview.cspSource} https://cdn.jsdelivr.net;
         img-src ${webview.cspSource} https: data:;">
       <title>ADF Preview</title>
+      <!-- Bootstrap CSS -->
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+      <!-- Bootstrap Icons -->
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
       <style>
         body { 
           margin: 0; 
-          padding: 20px; 
+          padding: 0; 
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
           background: var(--vscode-editor-background, #ffffff);
           color: var(--vscode-editor-foreground, #000000);
@@ -395,6 +397,8 @@ export class ADFCustomEditorProvider implements vscode.CustomTextEditorProvider 
           console.log('Webview loaded');
         });
       </script>
+      <!-- Bootstrap JS -->
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
       <script nonce="${nonce}" src="${atlaskitVendorUri}" onerror="console.error('Failed to load atlaskit-vendor.js')"></script>
       <script nonce="${nonce}" src="${reactVendorUri}" onerror="console.error('Failed to load react-vendor.js')"></script>
       <script nonce="${nonce}" src="${vendorUri}" onerror="console.error('Failed to load vendor.js')"></script>
