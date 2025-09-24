@@ -5161,12 +5161,40 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sinonjs/commons@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "@sinonjs/commons@npm:3.0.1"
+  dependencies:
+    type-detect: "npm:4.0.8"
+  checksum: 10c0/1227a7b5bd6c6f9584274db996d7f8cee2c8c350534b9d0141fc662eaf1f292ea0ae3ed19e5e5271c8fd390d27e492ca2803acd31a1978be2cdc6be0da711403
+  languageName: node
+  linkType: hard
+
+"@sinonjs/fake-timers@npm:^13.0.5":
+  version: 13.0.5
+  resolution: "@sinonjs/fake-timers@npm:13.0.5"
+  dependencies:
+    "@sinonjs/commons": "npm:^3.0.1"
+  checksum: 10c0/a707476efd523d2138ef6bba916c83c4a377a8372ef04fad87499458af9f01afc58f4f245c5fd062793d6d70587309330c6f96947b5bd5697961c18004dc3e26
+  languageName: node
+  linkType: hard
+
 "@sinonjs/fake-timers@npm:^6.0.1":
   version: 6.0.1
   resolution: "@sinonjs/fake-timers@npm:6.0.1"
   dependencies:
     "@sinonjs/commons": "npm:^1.7.0"
   checksum: 10c0/a77bead4d71b40d6f7f9a3ad66a00269aa2c078260f43f594b8aed4676c6c4e7c2b642d4b8e34df314e1c971589455f7b4267ab831bf44ffdccc0bda599850ad
+  languageName: node
+  linkType: hard
+
+"@sinonjs/samsam@npm:^8.0.1":
+  version: 8.0.3
+  resolution: "@sinonjs/samsam@npm:8.0.3"
+  dependencies:
+    "@sinonjs/commons": "npm:^3.0.1"
+    type-detect: "npm:^4.1.0"
+  checksum: 10c0/9bf57a8f8a484b3455696786e1679db7f0d6017de62099ee304bd364281fcb20895b7c6b05292aa10fecf76df27691e914fc3e1cb8a56d88c027e87d869dcf0c
   languageName: node
   linkType: hard
 
@@ -5614,6 +5642,22 @@ __metadata:
   version: 7.7.1
   resolution: "@types/semver@npm:7.7.1"
   checksum: 10c0/c938aef3bf79a73f0f3f6037c16e2e759ff40c54122ddf0b2583703393d8d3127130823facb880e694caa324eb6845628186aac1997ee8b31dc2d18fafe26268
+  languageName: node
+  linkType: hard
+
+"@types/sinon@npm:^17.0.4":
+  version: 17.0.4
+  resolution: "@types/sinon@npm:17.0.4"
+  dependencies:
+    "@types/sinonjs__fake-timers": "npm:*"
+  checksum: 10c0/7c67ae1050d98a86d8dd771f0a764e97adb9d54812bf3b001195f8cfaa1e2bdfc725d5b970b91e7b0bb6b7c1ca209f47993f2c6f84f1f868313c37441313ca5b
+  languageName: node
+  linkType: hard
+
+"@types/sinonjs__fake-timers@npm:*":
+  version: 8.1.5
+  resolution: "@types/sinonjs__fake-timers@npm:8.1.5"
+  checksum: 10c0/2b8bdc246365518fc1b08f5720445093cce586183acca19a560be6ef81f824bd9a96c090e462f622af4d206406dadf2033c5daf99a51c1096da6494e5c8dc32e
   languageName: node
   linkType: hard
 
@@ -6225,6 +6269,7 @@ __metadata:
     "@types/punycode": "npm:^2"
     "@types/react": "npm:^18.2.45"
     "@types/react-dom": "npm:^18.2.18"
+    "@types/sinon": "npm:^17.0.4"
     "@types/vscode": "npm:^1.74.0"
     "@typescript-eslint/eslint-plugin": "npm:^5.59.8"
     "@typescript-eslint/parser": "npm:^5.59.8"
@@ -6256,6 +6301,7 @@ __metadata:
     react: "npm:18.3.1"
     react-dom: "npm:18.3.1"
     react-intl: "npm:^7.1.11"
+    sinon: "npm:^21.0.0"
     stream-browserify: "npm:^3.0.0"
     stream-http: "npm:^3.2.0"
     string_decoder: "npm:^1.3.0"
@@ -7992,6 +8038,13 @@ __metadata:
   version: 5.2.0
   resolution: "diff@npm:5.2.0"
   checksum: 10c0/aed0941f206fe261ecb258dc8d0ceea8abbde3ace5827518ff8d302f0fc9cc81ce116c4d8f379151171336caf0516b79e01abdc1ed1201b6440d895a66689eb4
+  languageName: node
+  linkType: hard
+
+"diff@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "diff@npm:7.0.0"
+  checksum: 10c0/251fd15f85ffdf814cfc35a728d526b8d2ad3de338dcbd011ac6e57c461417090766b28995f8ff733135b5fbc3699c392db1d5e27711ac4e00244768cd1d577b
   languageName: node
   linkType: hard
 
@@ -14232,6 +14285,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"sinon@npm:^21.0.0":
+  version: 21.0.0
+  resolution: "sinon@npm:21.0.0"
+  dependencies:
+    "@sinonjs/commons": "npm:^3.0.1"
+    "@sinonjs/fake-timers": "npm:^13.0.5"
+    "@sinonjs/samsam": "npm:^8.0.1"
+    diff: "npm:^7.0.0"
+    supports-color: "npm:^7.2.0"
+  checksum: 10c0/4a60ef1e2685b716232a30dfea22bf62c0a8a8c9904a3cb053f30794cc2a3bbd470f0e615fe8d8f4424e9af48b3a9f8cb67f07eabeb9fb7b8ed50bd0f5f50dd9
+  languageName: node
+  linkType: hard
+
 "slash@npm:^3.0.0":
   version: 3.0.0
   resolution: "slash@npm:3.0.0"
@@ -14596,7 +14662,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"supports-color@npm:^7.0.0, supports-color@npm:^7.1.0":
+"supports-color@npm:^7.0.0, supports-color@npm:^7.1.0, supports-color@npm:^7.2.0":
   version: 7.2.0
   resolution: "supports-color@npm:7.2.0"
   dependencies:

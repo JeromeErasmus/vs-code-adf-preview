@@ -1,0 +1,70 @@
+{
+  "name": "Markdown with ADF Extensions",
+  "scopeName": "text.html.markdown.adf",
+  "injectionSelector": "text.html.markdown",
+  "patterns": [
+    {
+      "name": "markup.quote.adf.info",
+      "match": "^(>\\s*)(ℹ️\\s*\\*\\*Info:\\*\\*)(.*)",
+      "captures": {
+        "1": {"name": "punctuation.definition.quote.markdown"},
+        "2": {"name": "entity.name.tag.adf.info"},
+        "3": {"name": "markup.quote.adf.content"}
+      }
+    },
+    {
+      "name": "markup.quote.adf.warning",
+      "match": "^(>\\s*)(⚠️\\s*\\*\\*Warning:\\*\\*)(.*)",
+      "captures": {
+        "1": {"name": "punctuation.definition.quote.markdown"},
+        "2": {"name": "entity.name.tag.adf.warning"},
+        "3": {"name": "markup.quote.adf.content"}
+      }
+    },
+    {
+      "name": "markup.quote.adf.success",
+      "match": "^(>\\s*)(✅\\s*\\*\\*Success:\\*\\*)(.*)",
+      "captures": {
+        "1": {"name": "punctuation.definition.quote.markdown"},
+        "2": {"name": "entity.name.tag.adf.success"},
+        "3": {"name": "markup.quote.adf.content"}
+      }
+    },
+    {
+      "name": "markup.quote.adf.note",
+      "match": "^(>\\s*)(📝\\s*\\*\\*Note:\\*\\*)(.*)",
+      "captures": {
+        "1": {"name": "punctuation.definition.quote.markdown"},
+        "2": {"name": "entity.name.tag.adf.note"},
+        "3": {"name": "markup.quote.adf.content"}
+      }
+    },
+    {
+      "name": "markup.quote.adf.error",
+      "match": "^(>\\s*)(❌\\s*\\*\\*Error:\\*\\*)(.*)",
+      "captures": {
+        "1": {"name": "punctuation.definition.quote.markdown"},
+        "2": {"name": "entity.name.tag.adf.error"},
+        "3": {"name": "markup.quote.adf.content"}
+      }
+    },
+    {
+      "name": "markup.list.task.adf",
+      "match": "^(\\s*[-*+]\\s+)(\\[[ xX]\\])(\\s+)(.*)",
+      "captures": {
+        "1": {"name": "punctuation.definition.list.markdown"},
+        "2": {"name": "markup.list.task.checkbox.adf"},
+        "3": {"name": "markup.list.task.spacing.adf"},
+        "4": {"name": "markup.list.task.content.adf"}
+      }
+    },
+    {
+      "name": "markup.underline.link.adf.confluence",
+      "match": "\\[(.*?)\\]\\((https?://[^\\s/$.?#].[^\\s]*atlassian\\.net[^\\s]*)\\)",
+      "captures": {
+        "1": {"name": "string.other.link.title.markdown"},
+        "2": {"name": "markup.underline.link.adf.confluence"}
+      }
+    }
+  ]
+}

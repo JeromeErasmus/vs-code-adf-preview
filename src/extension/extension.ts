@@ -1,16 +1,41 @@
 import * as vscode from 'vscode';
 import { ADFCustomEditorProvider } from './providers/adfCustomEditorProvider';
+import { PreviewTabManager } from './providers/previewTabManager';
+import { MarkdownADFCompletionProvider } from './providers/markdownAdfCompletionProvider';
+import { MarkdownADFHoverProvider } from './providers/markdownAdfHoverProvider';
+import { MarkdownTemplateManager } from './templates/markdownTemplateManager';
 import { ADFValidator } from './validators/adfValidator';
 import { ADFDocument } from '../shared/types';
 import { processContent, detectFileType, FileType } from '../shared/converters/markdownConverter';
 
 let customEditorProvider: ADFCustomEditorProvider;
+let previewTabManager: PreviewTabManager;
+let templateManager: MarkdownTemplateManager;
 
 export function activate(context: vscode.ExtensionContext) {
   console.log('ADF Preview extension is now active!');
 
+  // Initialize managers
+  previewTabManager = new PreviewTabManager();
+  templateManager = new MarkdownTemplateManager();
+  
   // Register the custom editor provider
   customEditorProvider = new ADFCustomEditorProvider(context);
+  
+  // Register completion and hover providers for markdown files
+  const markdownCompletionProvider = new MarkdownADFCompletionProvider();
+  const markdownHoverProvider = new MarkdownADFHoverProvider();
+  
+  const completionProviderRegistration = vscode.languages.registerCompletionItemProvider(
+    { language: 'markdown' },
+    markdownCompletionProvider,
+    '>', '-', '*', '+'
+  );
+  
+  const hoverProviderRegistration = vscode.languages.registerHoverProvider(
+    { language: 'markdown' },
+    markdownHoverProvider
+  );
   
   const providerRegistration = vscode.window.registerCustomEditorProvider(
     'adf.preview',
@@ -39,10 +64,8 @@ export function activate(context: vscode.ExtensionContext) {
       return;
     }
 
-    // Open with custom editor
-    console.log('Opening custom editor for:', document.uri.fsPath);
-    await vscode.commands.executeCommand('vscode.openWith', document.uri, 'adf.preview');
-    console.log('Custom editor command executed');
+    // Use preview tab manager for smart tab handling
+    await previewTabManager.openPreview(document.uri);
   });
 
 
@@ -116,6 +139,47 @@ export function activate(context: vscode.ExtensionContext) {
     }
   });
 
+  const createMarkdownFromTemplateCommand = vscode.commands.registerCommand('adf.createMarkdownFromTemplate', async () => {
+    try {
+      const templates = templateManager.getTemplates();
+      
+      // Show template selection
+      const templateItems = templates.map(template => ({
+        label: template.name,
+        description: template.description,
+        detail: `Category: ${template.category}`,
+        template: template
+      }));
+
+      const selectedItem = await vscode.window.showQuickPick(templateItems, {
+        placeHolder: 'Select a template to create a new markdown document'
+      });
+
+      if (!selectedItem) {
+        return; // User cancelled
+      }
+
+      // Process template
+      const content = await templateManager.createFromTemplate(selectedItem.template.id);
+      if (!content) {
+        return; // User cancelled during variable input
+      }
+
+      // Create new untitled document
+      const document = await vscode.workspace.openTextDocument({
+        content: content,
+        language: 'markdown'
+      });
+
+      // Show the document
+      await vscode.window.showTextDocument(document);
+      
+      vscode.window.showInformationMessage(`Created ${selectedItem.template.name} document`);
+    } catch (error) {
+      vscode.window.showErrorMessage(`Failed to create template: ${error}`);
+    }
+  });
+
   const exportAsHTMLCommand = vscode.commands.registerCommand('adf.exportAsHTML', async () => {
     if (customEditorProvider) {
       await customEditorProvider.exportDocument('html');
@@ -165,8 +229,11 @@ export function activate(context: vscode.ExtensionContext) {
     testCommand,
     debugLogCommand,
     providerRegistration,
+    completionProviderRegistration,
+    hoverProviderRegistration,
     openPreviewCommand,
     validateDocumentCommand,
+    createMarkdownFromTemplateCommand,
     exportAsHTMLCommand,
     exportAsMarkdownCommand,
     closePreviewCommand
